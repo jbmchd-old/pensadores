@@ -1,0 +1,16 @@
+{
+    "name": "zendframework/skeleton-application",
+    "description": "Skeleton Application for ZF2",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "framework",
+        "zf2"
+    ],
+    "homepage": "http://framework.zend.com/",
+    "require-dev": {
+        "php": ">=5.5",
+        "zendframework/zendframework": "dev-master",
+        "zendexperts/ze-db": "dev-master",
+        "evandotpro/edp-module-layouts": "dev-master"
+    }
+}
