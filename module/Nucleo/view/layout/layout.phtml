@@ -1,0 +1,59 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Pensadores</title>
+
+        <?php
+        echo $this->headMeta()
+                ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+                ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+                ->setCharset('UTF-8');
+        ?>
+
+        <?php
+        echo $this->headScript()
+                ->prependFile($this->basePath() . '/js/global.js')
+                ->prependFile($this->basePath() . '/js/pensadores.components.plugin.js')
+                ->prependFile($this->basePath() . '/js/pensadores.commons.plugin.js')
+                ->prependFile($this->basePath() . '/js/plugin_form.js')
+                ->prependFile($this->basePath() . '/vendor/outros/js/filter_input.js')
+                ->prependFile($this->basePath() . '/vendor/outros/js/jquery_mask.js')
+                ->prependFile($this->basePath() . '/vendor/jquery-ui/datepicker-pt-BR.js')
+                ->prependFile($this->basePath() . '/vendor/jquery-ui/1.11.4/jquery-ui.js')
+                ->prependFile($this->basePath() . '/vendor/bootstrap/3.3.2/js/bootstrap.js')
+                ->prependFile($this->basePath() . '/vendor/jquery/1.11.2.min.js');
+        
+        echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => ''))
+                ->prependStylesheet($this->basePath() . '/css/global.css')
+                ->prependStylesheet($this->basePath() . '/vendor/outros/css/normalize.css')
+                ->prependStylesheet($this->basePath() . '/vendor/font-awesome/4.3.0/css/font-awesome.min.css')
+                ->prependStylesheet($this->basePath() . '/vendor/jquery-ui/1.11.4/jquery-ui.css')
+                ->prependStylesheet($this->basePath() . '/vendor/bootstrap/3.3.2/css/bootstrap.css');
+        ?>
+        
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        
+    </head>
+    <body>
+        <div class="row" id="container-topo">
+            <nav class="navbar navbar-inverse"></nav>
+        </div>
+        
+        <div class="container-fluid">
+        
+            <div class="row" id="container-body">
+                <?php echo $this->content; ?>
+            </div>
+            
+        </div> <!-- /container -->
+        
+        <div class="row hidden-xs hidden-sm" id="container-rodape">
+
+        </div>
+    </body>
+</html>

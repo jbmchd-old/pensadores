@@ -10,7 +10,6 @@
     "require-dev": {
         "php": ">=5.5",
         "zendframework/zendframework": "dev-master",
-        "zendexperts/ze-db": "dev-master",
-        "evandotpro/edp-module-layouts": "dev-master"
+        "zendexperts/ze-db": "dev-master"
     }
 }
