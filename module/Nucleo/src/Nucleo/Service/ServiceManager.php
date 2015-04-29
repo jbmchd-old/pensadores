@@ -1,6 +1,6 @@
 <?php
 
-namespace Nucleo\Services;
+namespace Nucleo\Service;
 
 use ZeDb\DatabaseManager;
 
@@ -25,9 +25,9 @@ class ServiceManager {
     private $modulo;
 
     /**
-     * @var string $servico Nome do servico
+     * @var string $entity Nome da entidade
      */
-    private $servico;
+    private $entity;
 
     /**
      * Nome da pasta que contem as classes
@@ -132,14 +132,12 @@ class ServiceManager {
      * @param integer $modalidade
      * @return Uma instancia do objeto do servico requisitado
      */
-    public function getService($modulo, $servico, $modalidade = self::ZEND_FRAMEWORK) {
+    public function getEntity($modulo, $entity, $modalidade = self::ZEND_FRAMEWORK) {
         
         $this->modalidade = $modalidade;
         $this->modulo = $modulo;
-        $this->servico = $servico;
+        $this->entity = $entity;
         $this->service_namespace = str_replace('/', '\\', $this->obtemNamespace() ) ;
-        
-//        $this->service_namespace = ;
         
         if ( ! class_exists($this->service_namespace) ){
             throw new \Exception("Erro ao carregar a classe $this->service_namespace, verique se a classe existe ou se os parametros foram passados corretamente!");
@@ -171,10 +169,9 @@ class ServiceManager {
         
         $iterator = new \RecursiveDirectoryIterator($path);
         $recursiveIterator = new \RecursiveIteratorIterator($iterator);
-
         $service = FALSE;
         foreach ( $recursiveIterator as $entry ) {
-            if($entry->getFilename() == $this->servico.'.php'){
+            if($entry->getFilename() == $this->entity.'.php'){
                 $service = "$this->modulo\\Entity".substr($entry->getPathname(), strlen($path), -4);
                 if(PHP_OS != 'WINNT'){
                     $service = str_replace('\\', '/', $service);
@@ -182,7 +179,6 @@ class ServiceManager {
                 break;
             }
         }
-        
         return $service;
     }
     

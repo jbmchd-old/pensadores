@@ -1,6 +1,6 @@
 <?php
 
-namespace Nucleo\Services;
+namespace Nucleo\Service;
 
 use ZeDb\Model;
 

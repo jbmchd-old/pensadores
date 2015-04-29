@@ -2,7 +2,7 @@
 
 namespace Coluna\Model;
 
-use Nucleo\Services\GenericTable;
+use Nucleo\Service\GenericTable;
 
 class ColColunaTemColuna extends GenericTable {
 	

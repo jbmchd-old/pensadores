@@ -1,11 +1,14 @@
 <?php
 
-namespace Coluna\Entity;
+namespace Coluna\Entity\View;
 
 use Nucleo\Service\GenericEntity;
 
-class ColColuna extends GenericEntity {
+class VColColuna extends GenericEntity {
 	
+    private $usrId;
+    private $ctgId;
+    private $chvId;
     private $colId;
     private $colTitulo;
     private $colTexto;
@@ -15,7 +18,19 @@ class ColColuna extends GenericEntity {
     private $colObservacao;
     private $colEndImagem;
     private $colStatus;
-    private $usrId;
+    private $chvNome;
+    private $ctgNome;
+    private $ctgApelido;
+    private $usrLogin;
+    private $usrSenha;
+    private $usrEmail;
+    private $usrNome;
+    private $usrSobrenome;
+    private $usrGenero;
+    private $usrDataNascimento;
+    private $usrDataCadastro;
+    private $usrFoto;
+    private $usrStatus;
 
     public function __call($name, $arguments) {
         $attr = lcfirst(substr($name, 3));
@@ -27,6 +42,5 @@ class ColColuna extends GenericEntity {
             return false;;
         }
     }
-
 }
 ?>

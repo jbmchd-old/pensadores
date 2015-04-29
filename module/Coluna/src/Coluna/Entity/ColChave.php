@@ -2,7 +2,7 @@
 
 namespace Coluna\Entity;
 
-use Nucleo\Services\GenericEntity;
+use Nucleo\Service\GenericEntity;
 
 class ColChave extends GenericEntity {
 	

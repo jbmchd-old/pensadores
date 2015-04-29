@@ -7,20 +7,8 @@ use Zend\Mvc\Controller\AbstractActionController,
     Zend\View\Model\JsonModel;
 
 abstract class ControllerGenerico extends AbstractActionController {
-
-    /**
-     * constante usada pelo metodo 'enviarMensagem' para definir o destino das mensagens
-     */
-    const MSG_PARA_ACTION = 1;
-    
-    /**
-     * constante usada pelo metodo 'enviarMensagem' para definir o destino das mensagens
-     */
-    const MSG_PARA_LAYOUT = 0;
     
     const MESCLAR_DUPLICADOS = 1;
-    
-    private $msg_controller;
 
     public function buscaDateServidorJsonAction(){
         return new JsonModel(array('date' => (new \DateTime('now'))->format('Y-m-d H:i:s')));
@@ -30,22 +18,22 @@ abstract class ControllerGenerico extends AbstractActionController {
         die(__NAMESPACE__.__CLASS__);
     }
     
-    public function setarMensagem($msg, $tipo){
+    public function setFlashMessage($msg, $tipo){
         $flash = $this->flashMessenger();
-        if($tipo === 'sucesso'){
+        if($tipo === 'success'){
             $flash->addSuccessMessage($msg);
-        } else if($tipo === 'erro'){
+        } else if($tipo === 'danger'){
             $flash->addErrorMessage($msg);
         } else if($tipo === 'info'){
             $flash->addInfoMessage($msg);
-        } else if($tipo === 'alerta'){
+        } else if($tipo === 'warnig'){
             $flash->addMessage($msg);
         } 
     }
     
-    public function enviarMensagens($destino=ControllerGenerico::MSG_PARA_LAYOUT){
+    public function getAllFlashMessages(){
         $flash = $this->flashMessenger();
-        $msg_controller='';
+        $msg_controller=[];
         if( $flash->hasSuccessMessages() ){
             $msg_controller['success'] = $flash->getSuccessMessages();
         } 
@@ -62,14 +50,12 @@ abstract class ControllerGenerico extends AbstractActionController {
             $msg_controller['warning'] = $flash->getMessages();
         }
         
-        if($msg_controller){
-            
-            if($destino == ControllerGenerico::MSG_PARA_LAYOUT){
-                $this->layout()->setVariable('msg_controller',$msg_controller);
-            } else {
-                $this->msg_controller = $msg_controller;
-            }
-        }   
+        return $msg_controller;
+    }
+    
+    public function sendFlashMessagesLayout(){
+        $msg_controller = $this->getAllFlashMessages();
+        $this->layout()->setVariable('flash_messages',$msg_controller);   
     }
     
     public function objetosParaArray($objetos, $mesclar_duplicados=false){
@@ -89,6 +75,25 @@ abstract class ControllerGenerico extends AbstractActionController {
         
         return $array;
         
+    }
+    
+    protected function super_array_unique(array $arrays){
+        $merge=[];
+        foreach ($arrays as $array) {
+            $merge = array_merge_recursive($merge, $array); 
+        }
+        
+        $merge_unique = [];
+        foreach ($merge as $key => $array) {
+            $unique = array_unique($array);
+            $merge_unique[$key] = (sizeof($unique)==1)?$unique[0]:$unique;
+        }
+        return $merge_unique;
+    }
+    
+    protected function basePath(){
+        $server = $this->getRequest()->getServer()->toArray();
+        return $server['REQUEST_URI'];
     }
     
 }

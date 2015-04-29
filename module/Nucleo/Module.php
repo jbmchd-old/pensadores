@@ -34,7 +34,7 @@ class Module
         return array(
             'factories' => array(
                 'Nucleo\ServiceManager' => function( $sm ){
-                    return new \Nucleo\Services\ServiceManager( $sm->get('ZeDbManager') );
+                    return new \Nucleo\Service\ServiceManager( $sm->get('ZeDbManager') );
                 },
             )
         );

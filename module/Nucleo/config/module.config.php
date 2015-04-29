@@ -11,12 +11,12 @@ return [
     ],
     'controller_plugins' => [
         'invokables' => [
-            'p' => 'Nucleo\Plugins\PluginGenerico'
+            'p' => 'Nucleo\Plugin\PluginGenerico'
         ]
     ],
     'view_helpers' => [
         'invokables' => [
-            'p' => 'Nucleo\ViewHelpers\HelperGenerico',
+            'p' => 'Nucleo\ViewHelper\HelperGenerico',
         ],
     ],
     'view_manager' => [
