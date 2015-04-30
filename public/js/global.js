@@ -1,5 +1,12 @@
 function main() {
     $(function() {
+        /*
+         * DEFAULTS
+         */
+        $('[data-toggle="tooltip"], [data-tooltip]').tooltip();
+        $('[data-toggle="popover"], [data-popover]').popover();
+        
+        $('div.popover').is(':visible')
         
         // AJAX Defalts
         $.ajaxSetup({

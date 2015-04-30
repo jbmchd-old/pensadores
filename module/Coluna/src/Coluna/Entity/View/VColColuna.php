@@ -32,6 +32,38 @@ class VColColuna extends GenericEntity {
     private $usrFoto;
     private $usrStatus;
 
+    function getColDataPostagem() {
+        return $this->colDataPostagem;
+    }
+
+    function getColDataModificacao() {
+        return $this->colDataModificacao;
+    }
+
+    function getUsrDataNascimento() {
+        return $this->usrDataNascimento;
+    }
+
+    function getUsrDataCadastro() {
+        return $this->usrDataCadastro;
+    }
+
+    function setColDataPostagem($colDataPostagem) {
+        $this->colDataPostagem = (new \DateTime($colDataPostagem))->format('d/m/Y');
+    }
+
+    function setColDataModificacao($colDataModificacao) {
+        $this->colDataModificacao = (new \DateTime($colDataModificacao))->format('d/m/Y');
+    }
+
+    function setUsrDataNascimento($usrDataNascimento) {
+        $this->usrDataNascimento = (new \DateTime($usrDataNascimento))->format('d/m/Y');
+    }
+
+    function setUsrDataCadastro($usrDataCadastro) {
+        $this->usrDataCadastro = (new \DateTime($usrDataCadastro))->format('d/m/Y');
+    }
+        
     public function __call($name, $arguments) {
         $attr = lcfirst(substr($name, 3));
         if(strpos($name, 'set') === 0){

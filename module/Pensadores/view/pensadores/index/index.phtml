@@ -1,44 +1,81 @@
+<?php
+$todas_colunas = $this->colunas;
+?>
 <style>
     #index-principal > div {
         background: white;
     }
-    #index-principal * {
-        border: 1px solid;
-    }
+    
     .coluna_resumida{
         height: 50px;
     }
-    .coluna_detalhes > div{
+    .coluna_destaque > div{
         margin: 1% 0;
     }
+    .coluna_destaque img{
+        max-width: 189px;
+    }
+    
+    .coluna_destaque div:nth-child(2):not(.popover){
+        
+        
+        font-weight: bold;
+        padding-top: 1px;
+    }
+    
+    .coluna_resumida {
+        border-top: 1px solid;
+    }
+    .coluna_resumida:last-child {
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+    }
+    
+    .fa-md {
+        font-size: 1.3em
+    }
+    
 </style>
 
 <div id="index-principal" class="col-xs-30 no-padding">
-    <div class="col-xs-30 col-md-9 no-padding" >
-        <div class="coluna_detalhes col-xs-13 col-md-30 no-padding" style="margin-top: 5%">
-            <div class="col-xs-20" style="height: 200px; margin-left: 14%">imagem</div>
-            <div class="col-xs-30" style="height: 50px">titulo destaque</div>
-            <div class="col-xs-30" style="height: 35px">info gerais</div>
+    <?php foreach ($todas_colunas as $ctg_id => $colunas) : 
+        $coluna_destaque = array_slice($colunas,0,1)[0];
+//        echo '<pre>';
+//        print_r($coluna_destaque);
+//        die();
+    ?>
+    <div class="col-xs-30 col-md-9 col-md-offset-1 no-padding" >
+        <div class="coluna_destaque col-xs-13 col-md-30 text-center no-padding" style="margin-top: 5%">
+            <div class="col-xs-30 col-md-30" style="height: 200px;"><img src="<?= $coluna_destaque['col_end_imagem']?>" /></div>
+            <div class="col-xs-30 text-left " style="height: 50px"><?= $coluna_destaque['col_titulo']?></div>
+            <div class="col-xs-30" style="height: 35px">
+                <span class="col-xs-offset-1 col-md-offset-3 btn btn-default" style="margin-left: 0" data-toggle="tooltip" data-placement="top" title="Categoria: <?= $coluna_destaque['ctg_nome'] ?>" ><i class="fa fa-smile-o fa-md"></i></span>
+                <span class="col-xs-offset-1 col-md-offset-3 btn btn-default" data-toggle="tooltip" data-placement="top" title="Publicação: <?= $coluna_destaque['col_data_postagem'] ?>" ><i class="fa fa-calendar fa-md"></i></span>
+                <span class="col-xs-offset-1 col-md-offset-3 btn btn-default" data-tooltip data-popover data-placement="top" title="Chaves" data-content="<?=''?>" ><i class="fa fa-key fa-md"></i></span>
+                <span class="col-xs-offset-1 col-md-offset-3 btn btn-default" data-tooltip data-popover data-placement="top" title="Resumo" data-content="<?=$coluna_destaque['col_resumo']?>" ><i class="fa fa-list fa-md"></i></span>
+            </div>
         </div>
         <div class="col-xs-15 col-md-30 no-padding">
-            <div class="col-xs-30 col-md-30 coluna_resumida"><div class="col-xs-25">titulo simulando uma coluna com um titulo bem grande sendo que o autor é fulano de tal</div><div class=" col-xs-offset-26">expandir</div></div>
-            <div class="col-xs-30 col-md-30 coluna_resumida"><div class="col-xs-25">titulo simulando uma coluna com um titulo bem grande sendo que o autor é fulano de tal</div><div class=" col-xs-offset-26">expandir</div></div>
-            <div class="col-xs-30 col-md-30 coluna_resumida"><div class="col-xs-25">titulo simulando uma coluna com um titulo bem grande sendo que o autor é fulano de tal</div><div class=" col-xs-offset-26">expandir</div></div>
-            <div class="col-xs-30 col-md-30 coluna_resumida"><div class="col-xs-25">titulo simulando uma coluna com um titulo bem grande sendo que o autor é fulano de tal</div><div class=" col-xs-offset-26">expandir</div></div>
-            <div class="col-xs-30 col-md-30 coluna_resumida"><div class="col-xs-25">titulo simulando uma coluna com um titulo bem grande sendo que o autor é fulano de tal</div><div class=" col-xs-offset-26">expandir</div></div>
-            <div class="col-xs-30 col-md-30 coluna_resumida"><div class="col-xs-25">titulo simulando uma coluna com um titulo bem grande sendo que o autor é fulano de tal</div><div class=" col-xs-offset-26">expandir</div></div>
-            <div class="col-xs-30 col-md-30 coluna_resumida"><div class="col-xs-25">titulo simulando uma coluna com um titulo bem grande sendo que o autor é fulano de tal</div><div class=" col-xs-offset-26">expandir</div></div>
-            <div class="col-xs-30 col-md-30 coluna_resumida"><div class="col-xs-25">titulo simulando uma coluna com um titulo bem grande sendo que o autor é fulano de tal</div><div class=" col-xs-offset-26">expandir</div></div>
+            <?php foreach ($colunas as $coluna) : ?>
+            <div class="col-xs-30 col-md-30 coluna_resumida">
+                <div class="col-xs-25"><?= $coluna['col_titulo']?></div>
+                <div class=" col-xs-offset-26" style="margin-top: 3%;">
+                    <span class="btn btn-default" data-tooltip title="Expandir"><i class="fa fa-arrows-alt"></i></span>
+                </div>
+            </div>
+            <?php endforeach;  ?>
         </div>
-        <div class="col-xs-2 col-md-30 text-center" style="">
-            <div class="col-xs-30 col-md-5 col-md-push-10">+</div>
-            <div class="col-xs-30 col-md-5 col-md-push-10">-</div>
+        <div class="col-xs-2 col-md-30 text-center" style="padding: 5px 0">
+            <div class="col-xs-30 col-md-5 col-md-push-10"><span class="btn btn-default" data-tooltip title="Colunas anteriores"><i class="fa fa-chevron-left"></i></span></div>
+            <div class="col-xs-30 col-md-5 col-md-push-10"><span class="btn btn-default" data-tooltip title="Próximas colunas"><i class="fa fa-chevron-right"></i></span></div>
         </div>     
     </div>
+    <?php endforeach;  ?>
     
     
 </div>
 
 <script>
-    
+    //data-toggle="tooltip" title="Tooltip on left" data-placement="top" 
+    //data-toggle="popover" title="Popover title"   data-content="And here's some amazing content. It's very engaging. Right?"
 </script>
