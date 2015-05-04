@@ -5,77 +5,166 @@ $todas_colunas = $this->colunas;
     #index-principal > div {
         background: white;
     }
-    
-    .coluna_resumida{
-        height: 50px;
-    }
     .coluna_destaque > div{
         margin: 1% 0;
     }
     .coluna_destaque img{
         max-width: 189px;
     }
-    
     .coluna_destaque div:nth-child(2):not(.popover){
-        
-        
         font-weight: bold;
         padding-top: 1px;
     }
     
-    .coluna_resumida {
+    div[data-name^='colunas_resumidas'] > :first-child{
         border-top: 1px solid;
     }
-    .coluna_resumida:last-child {
-        border-top: 1px solid;
+    div[data-name^='colunas_resumidas'] > div {
         border-bottom: 1px solid;
+        height: 50px; // altura cada coluna
     }
     
-    .fa-md {
-        font-size: 1.3em
+    .css_botao_scroll_ativo {
+        color: #000;
+        cursor: pointer;
     }
+    
+    .css_botao_scroll_inativo {
+        color: #D0D0D0;
+        cursor: default;
+    }
+   
+    
+    
+/*    .fa-md {
+        font-size: 1.3em
+    }*/
     
 </style>
 
 <div id="index-principal" class="col-xs-30 no-padding">
     <?php foreach ($todas_colunas as $ctg_id => $colunas) : 
         $coluna_destaque = array_slice($colunas,0,1)[0];
-//        echo '<pre>';
-//        print_r($coluna_destaque);
-//        die();
     ?>
-    <div class="col-xs-30 col-md-9 col-md-offset-1 no-padding" >
-        <div class="coluna_destaque col-xs-13 col-md-30 text-center no-padding" style="margin-top: 5%">
-            <div class="col-xs-30 col-md-30" style="height: 200px;"><img src="<?= $coluna_destaque['col_end_imagem']?>" /></div>
-            <div class="col-xs-30 text-left " style="height: 50px"><?= $coluna_destaque['col_titulo']?></div>
+    <div class="col-xs-30 col-md-9 col-md-offset-1 no-padding" style="padding-top: 1%" >
+        <div class="text-center"><i class="fa fa-smile-o fa-2x"></i></div>
+        <div class="coluna_destaque col-xs-13 col-md-30 text-center no-padding">
+            <div id="col_dest_end_imagem" class="col-xs-30 col-md-30" style="height: 200px;"><img src="<?= $coluna_destaque['col_end_imagem']?>" /></div>
+            <div id="col_dest_titulo" class="col-xs-30 text-left" style="height: 50px"><?= $coluna_destaque['col_titulo']?></div>
             <div class="col-xs-30" style="height: 35px">
-                <span class="col-xs-offset-1 col-md-offset-3 btn btn-default" style="margin-left: 0" data-toggle="tooltip" data-placement="top" title="Categoria: <?= $coluna_destaque['ctg_nome'] ?>" ><i class="fa fa-smile-o fa-md"></i></span>
-                <span class="col-xs-offset-1 col-md-offset-3 btn btn-default" data-toggle="tooltip" data-placement="top" title="Publicação: <?= $coluna_destaque['col_data_postagem'] ?>" ><i class="fa fa-calendar fa-md"></i></span>
-                <span class="col-xs-offset-1 col-md-offset-3 btn btn-default" data-tooltip data-popover data-placement="top" title="Chaves" data-content="<?=''?>" ><i class="fa fa-key fa-md"></i></span>
-                <span class="col-xs-offset-1 col-md-offset-3 btn btn-default" data-tooltip data-popover data-placement="top" title="Resumo" data-content="<?=$coluna_destaque['col_resumo']?>" ><i class="fa fa-list fa-md"></i></span>
+                <span id="col_dest_data_post" class="col-xs-offset-1 btn btn-default cursor_default" data-tooltip data-placement="top" title="Publicação: <?= $coluna_destaque['col_data_postagem'] ?>" ><i class="fa fa-calendar fa-md"></i></span>
+                <span id="col_dest_chaves" class="col-xs-offset-1 col-md-offset-3 btn btn-default" data-tooltip data-popover data-placement="top" title="Chaves" data-content="<?=''?>" ><i class="fa fa-key fa-md"></i></span>
+                <span id="col_dest_resumo" class="col-xs-offset-1 col-md-offset-3 btn btn-default" data-tooltip data-popover data-placement="top" title="Resumo" data-content="<?=$coluna_destaque['col_resumo']?>" ><i class="fa fa-list fa-md"></i></span>
             </div>
         </div>
-        <div class="col-xs-15 col-md-30 no-padding">
-            <?php foreach ($colunas as $coluna) : ?>
+        
+        <span data-name="md_menos_colunas_<?=$ctg_id?>" class="hidden-xs col-md-30 text-center css_botao_scroll_inativo" style="padding: 5px 0; cursor: pointer">
+            <div class="col-xs-30 hide"><span data-tooltip title="Colunas anteriores"><i class="fa fa-chevron-up"></i></span></div>
+        </span>
+        
+        <div data-name="colunas_resumidas_<?=$ctg_id?>" class="col-xs-15 col-md-30 no-padding">
+            
+            
+            <?php foreach ($colunas as $col_id => $coluna) : ?>
             <div class="col-xs-30 col-md-30 coluna_resumida">
                 <div class="col-xs-25"><?= $coluna['col_titulo']?></div>
                 <div class=" col-xs-offset-26" style="margin-top: 3%;">
-                    <span class="btn btn-default" data-tooltip title="Expandir"><i class="fa fa-arrows-alt"></i></span>
+                    <span id="col_expadir_<?=$ctg_id?>_<?=$col_id?>" class="btn btn-default" data-tooltip title="Expandir"><i class="fa fa-arrows-alt"></i></span>
                 </div>
             </div>
             <?php endforeach;  ?>
+            
         </div>
-        <div class="col-xs-2 col-md-30 text-center" style="padding: 5px 0">
+        
+        <span data-name="md_mais_colunas_<?=$ctg_id?>" class="hidden-xs col-md-30 text-center css_botao_scroll_ativo hide" style="padding: 5px 0; cursor: pointer">
+            <div class="col-xs-30"><span data-tooltip title="Colunas anteriores"><i class="fa fa-chevron-down"></i></span></div>
+        </span>
+        
+<!--        <div class="col-xs-2 col-md-30 text-center" style="padding: 5px 0">
             <div class="col-xs-30 col-md-5 col-md-push-10"><span class="btn btn-default" data-tooltip title="Colunas anteriores"><i class="fa fa-chevron-left"></i></span></div>
             <div class="col-xs-30 col-md-5 col-md-push-10"><span class="btn btn-default" data-tooltip title="Próximas colunas"><i class="fa fa-chevron-right"></i></span></div>
-        </div>     
+        </div>     -->
     </div>
     <?php endforeach;  ?>
-    
     
 </div>
 
 <script>
-    //data-toggle="tooltip" title="Tooltip on left" data-placement="top" 
-    //data-toggle="popover" title="Popover title"   data-content="And here's some amazing content. It's very engaging. Right?"
+    $(function (){
+        document.body.style.overflow = "hidden";
+        var todas_colunas = <?= (sizeof($todas_colunas)) ? json_encode($todas_colunas) : [] ?>;
+        var altura_coluna = 50;
+        var max_height_colunas_resumidas = 0;
+        
+        function calculaAlturaParaColunas(){
+            var altura_rodape = 50;
+            var colunas_resumidas = $('div[data-name^=colunas_resumidas]');
+            var altura_documento = $(window).height();
+            
+            var local_primeira_coluna = colunas_resumidas.first().offset().top;
+            var espaco_disponivel = altura_documento - local_primeira_coluna - altura_rodape;
+            var qtd_colunas_possiveis = parseInt(espaco_disponivel/altura_coluna);
+            max_height_colunas_resumidas = qtd_colunas_possiveis*altura_coluna;
+            
+            colunas_resumidas
+                .css({
+                    'max-height':max_height_colunas_resumidas,
+                    'overflow': 'hidden'
+                })
+                .each(function (key){
+                    var ctg_id = $(this).attr('data-name').split('_').pop();
+                    var qtd_colunas = $(this).find('.coluna_resumida').length;
+                    if(qtd_colunas > qtd_colunas_possiveis){
+                        $('span[data-name=md_menos_colunas_'+ctg_id+'] > div, span[data-name^=md_mais_colunas_'+ctg_id+']').removeClass('hide').addClass('show');
+                    }
+                });
+            
+        }
+        
+        $('span[id^=col_expadir_]').click(function(){
+            var id_split = $(this).attr('id').split('_');
+            var col_id = id_split.pop();
+            var ctg_id = id_split.pop();
+            var coluna = todas_colunas[ctg_id][col_id];
+            
+            $('#col_dest_end_imagem img').attr('src',coluna.col_end_imagem);
+            $('#col_dest_titulo').html(coluna.col_titulo);
+            $('#col_dest_data_post').attr('title','Publicação: '+coluna.col_data_postagem);
+            $('#col_dest_chaves').attr('data-content', '');
+            $('#col_dest_resumo').attr('data-content', coluna.col_resumo);
+        });
+        
+        calculaAlturaParaColunas();
+        
+        $('span[data-name^=md_menos_colunas],span[data-name^=md_mais_colunas]').click(function (){
+            var incremento_scroll = 50;
+            var botao_clicado = $(this).attr('data-name');
+            var ctg_id = $(this).attr('data-name').split('_').pop();
+            var colunas_resumidas = $('div[data-name=colunas_resumidas_'+ctg_id+']');
+            var max_scroll = (colunas_resumidas.find('.coluna_resumida').length * altura_coluna) - (max_height_colunas_resumidas);
+            
+            if(botao_clicado.search('md_menos') > -1){
+                incremento_scroll = -50;
+            }
+            
+            var pos_scroll = colunas_resumidas.scrollTop() + incremento_scroll;
+            colunas_resumidas.animate({scrollTop: pos_scroll}, 250);
+            
+            if(pos_scroll <= 0 ){
+                $('span[data-name=md_menos_colunas_'+ctg_id+']').removeClass('css_botao_scroll_ativo').addClass('css_botao_scroll_inativo');
+            } else {
+                $('span[data-name=md_menos_colunas_'+ctg_id+']').removeClass('css_botao_scroll_inativo').addClass('css_botao_scroll_ativo');
+            }
+            
+            if(pos_scroll >= max_scroll ){
+                $('span[data-name=md_mais_colunas_'+ctg_id+']').removeClass('css_botao_scroll_ativo').addClass('css_botao_scroll_inativo');
+            } else {
+                $('span[data-name=md_mais_colunas_'+ctg_id+']').removeClass('css_botao_scroll_inativo').addClass('css_botao_scroll_ativo');
+            }
+            
+            
+        });
+        
+    });
+    
 </script>

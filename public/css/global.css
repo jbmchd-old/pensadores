@@ -68,6 +68,7 @@ BOOTSTRAP
 }
 
 /*CLASSES GERAIS*/
+.cursor_default { cursor: default; }
 .no-padding {padding: 0;}
 .no-margin {margin: 0;}
 .with-border {border: 1px solid;}
