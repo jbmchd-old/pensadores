@@ -27,6 +27,10 @@ return [
         ],
     ],
     'view_manager' => [
+        'template_map' => [
+            'bloco/destaque'  => __DIR__ . '/../view/pensadores/partial/bloco-destaque.phtml',  
+            'bloco/comum'  => __DIR__ . '/../view/pensadores/partial/bloco-comum.phtml',  
+        ],
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],

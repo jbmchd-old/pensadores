@@ -4,71 +4,20 @@
 
 body: #E8E8E8
 
-Azul primario: #337AB5
-Azul hover: #3989BF
-Azul pressed: #2C6C96
+Laranja primario: #D89D33
+Laranja hover: #B17C2B
 -
-Cinza primario: #313537
-Cinza hover: #252627
-Cinza pressed: #383B3D
+Rosa primario: #C270AD
+Rosa hover: #93488C
+-
+Azul primario: #2D84C6
+Azul hover: #1C6693
 
 */
-
-
-
-html > body > .container-fluid,
-html > body > .container{
-    height: 100%
-}
-
-body{
-    background: #E8E8E8;
-}
-/*
-BOOTSTRAP
-*/
-
-.container-fluid,
-.container {
-    max-width: 1200px;
-    min-width: 550px;
-}
-
-.navbar {
-    height: 10%;
-    margin: 0;
-    background: none;
-    border: none;
-}
-
-.row {
-    min-height: 25px;
-}
-/*OUTROS ELEMENTOS*/
-
-#container-topo{
-    margin: 0;
-    border: 1px solid;
-}
-
-#container-body{
-    /*background: blue;*/
-}
-
-#container-rodape{
-    background: #222;
-    width: 100%
-}
-
-#container-topo,
-#container-rodape {
-    margin: 0;
-    background: #337AB5;
-    border: none;
-}
 
 /*CLASSES GERAIS*/
 .cursor_default { cursor: default; }
 .no-padding {padding: 0;}
 .no-margin {margin: 0;}
 .with-border {border: 1px solid;}
+.clear {clear:both}
