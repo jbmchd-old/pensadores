@@ -4,7 +4,7 @@ namespace Coluna\Entity\View;
 
 use Nucleo\Service\GenericEntity;
 
-class VColColuna extends GenericEntity {
+class VColUltimasPostadas extends GenericEntity {
 	
     private $usrId;
     private $ctgId;

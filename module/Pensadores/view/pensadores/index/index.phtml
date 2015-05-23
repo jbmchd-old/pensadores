@@ -27,35 +27,25 @@
 </style>
 
     <?php
-    $todas_colunas = $this->colunas;
+    $ultimas_colunas = $this->ultimas_colunas; 
+    $colunas = $this->colunas;
     ?>
     
 <div id="slider" class="bloco bloco-destaque col-md-9">
     <ul class="bjqs">
         <?php
-            echo $this->partial('bloco/destaque',['tipo'=>'paisagem', 'categoria'=>'cabeca']);
-            echo $this->partial('bloco/destaque',['tipo'=>'retrato', 'categoria'=>'coracao']);
-            echo $this->partial('bloco/destaque',['tipo'=>'paisagem', 'categoria'=>'biblia']);
+            foreach ($ultimas_colunas as $coluna) {
+                echo $this->partial('bloco/destaque',['coluna'=>$coluna]);
+            }
         ?>
     </ul>
 </div>
 
 
     <?php
-        echo $this->partial('bloco/comum',['categoria'=>'cabeca']);
-        echo $this->partial('bloco/comum',['categoria'=>'coracao']);
-        echo $this->partial('bloco/comum',['categoria'=>'biblia']);
-        echo $this->partial('bloco/comum',['categoria'=>'coracao']);
-        echo $this->partial('bloco/comum',['categoria'=>'biblia']);
-        echo $this->partial('bloco/comum',['categoria'=>'cabeca']);
-        echo $this->partial('bloco/comum',['categoria'=>'biblia']);
-        echo $this->partial('bloco/comum',['categoria'=>'coracao']);
-        echo $this->partial('bloco/comum',['categoria'=>'biblia']);
-        echo $this->partial('bloco/comum',['categoria'=>'coracao']);
-        echo $this->partial('bloco/comum',['categoria'=>'cabeca']);
-        echo $this->partial('bloco/comum',['categoria'=>'coracao']);
-        echo $this->partial('bloco/comum',['categoria'=>'biblia']);
-        echo $this->partial('bloco/comum',['categoria'=>'coracao']);
+        foreach ($colunas as $coluna) {
+            echo $this->partial('bloco/comum',['coluna'=>$coluna]);
+        }
     ?>
 
 <script>

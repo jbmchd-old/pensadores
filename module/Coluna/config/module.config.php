@@ -8,8 +8,23 @@ return [
                     'route'    => '/coluna',
                     'defaults' => [
                         '__NAMESPACE__' => 'Coluna\Controller',
-                        'controller'    => 'Index',
+                        'controller'    => 'Colunas',
                         'action'        => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'default' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/[:controller[/:id]]',
+                            'constraints' => [
+                                'controller'=> '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'        => '[0-9]*',
+                            ],
+                            'defaults' => [
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -23,10 +38,16 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            'Coluna\Controller\Index' => 'Coluna\Controller\IndexController'
+            'Coluna\Controller\Colunas' => 'Coluna\Controller\ColunasController',
+            'Coluna\Controller\PensandoCabeca' => 'Coluna\Controller\PensandoCabecaController',
+            'Coluna\Controller\PensandoCoracao' => 'Coluna\Controller\PensandoCoracaoController',
+            'Coluna\Controller\PensandoBiblia' => 'Coluna\Controller\PensandoBibliaController',
         ],
     ],
     'view_manager' => [
+        'template_map' => [
+            'exibe_coluna'  => __DIR__ . '/../view/coluna/partial/exibe_coluna.phtml',
+        ],
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
