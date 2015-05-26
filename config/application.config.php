@@ -4,6 +4,7 @@ return array(
     'modules' => array(
         'ZeDb',
         'Nucleo',
+        'Acesso',
         'Pensadores',
         'Coluna',
     ),

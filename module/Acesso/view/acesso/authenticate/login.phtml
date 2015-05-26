@@ -1,0 +1,47 @@
+<?php
+echo $this->headLink(array('rel' => 'shortcut icon', 'href' => $this->basePath() . '/img/'))
+        ->prependStylesheet($this->basePath() . '/css/login.css');
+
+$message_login = '';
+if(isset($this->messageLogin)){
+    $message_login = $this->messageLogin;
+}
+
+?>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Login</title>
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700">
+
+        <!--[if lt IE 9]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="container">
+
+            <div id="login" style="margin: 0 auto">
+                <?php if($this->sessao()->isLogged()) : ?>
+                <span>Você está logado!</span>
+                <?php else : ?>     
+                <form method="POST" id="form_login" action="/acesso/login">
+                    <fieldset class="clearfix">
+                        <p><span class="fontawesome-user"></span><input type="text" placeholder="Usuário" name="user" id="user" data-obrigatorio /></p> <!-- JS because of IE support; better: placeholder="Username" -->
+                        <p><span class="fontawesome-lock"></span><input type="password" placeholder="Senha" name="pass" id="pass" data-obrigatorio /></p> <!-- JS because of IE support; better: placeholder="Password" -->
+                        <p><input type="submit" value="Entrar"></p>
+                    </fieldset>
+                </form>
+                <?php endif; ?>
+            </div> <!-- end login -->
+        </div>
+        
+    </body>
+    <script>
+        var $message_login = '<?= $message_login ?>';
+        if($message_login.trim().length > 0){
+                $().alert($message_login);
+        }
+
+    </script>
+</html>

@@ -25,9 +25,9 @@ class ServiceManager {
     private $modulo;
 
     /**
-     * @var string $entity Nome da entidade
+     * @var string $servico Nome do servico
      */
-    private $entity;
+    private $servico;
 
     /**
      * Nome da pasta que contem as classes
@@ -47,6 +47,8 @@ class ServiceManager {
     private $config;
     
     private $service_namespace;
+    
+    private $type_service;
 
     /**
      * @var integer Constante que armazena o valor referente a modalide servico utilizando o ZF2
@@ -57,6 +59,10 @@ class ServiceManager {
      * @var integer Constante que armazena o valor referente a modalide servico utilizando o Web Services
      */
     const WEB_SERVICE = 2;
+    
+    const TYPE_ENTITY = 'entity';
+    
+    const TYPE_SERVICE = 'service';
 
     /**
      * Seta os parametros da classe
@@ -132,12 +138,14 @@ class ServiceManager {
      * @param integer $modalidade
      * @return Uma instancia do objeto do servico requisitado
      */
-    public function getEntity($modulo, $entity, $modalidade = self::ZEND_FRAMEWORK) {
+    public function getService($modulo, $servico, $type_service = self::TYPE_SERVICE, $modalidade = self::ZEND_FRAMEWORK) {
         
         $this->modalidade = $modalidade;
         $this->modulo = $modulo;
-        $this->entity = $entity;
+        $this->servico = $servico;
+        $this->type_service = $type_service;
         $this->service_namespace = str_replace('/', '\\', $this->obtemNamespace() ) ;
+        
         
         if ( ! class_exists($this->service_namespace) ){
             throw new \Exception("Erro ao carregar a classe $this->service_namespace, verique se a classe existe ou se os parametros foram passados corretamente!");
@@ -145,8 +153,12 @@ class ServiceManager {
         
         $instancia = null;
         if ($this->modalidade == self::ZEND_FRAMEWORK) {
-            $this->configuraZeDb();
-            $instancia = $this->em->get($this->service_namespace);
+            if($this->type_service = self::TYPE_ENTITY){
+                $this->configuraZeDb();
+                $instancia = $this->em->get($this->service_namespace);
+            } else {
+                $instancia = new $this->service_namespace;
+            }
         } 
         return $instancia;
     }
@@ -156,12 +168,15 @@ class ServiceManager {
         $config = isset($config['zendexperts_zedb']) && (is_array($config['zendexperts_zedb']) || $config['zendexperts_zedb'] instanceof ArrayAccess)
         ? array_merge($config['zendexperts_zedb'], $this->geraArrayConfig($this->service_namespace))
         : array();
+        
         $this->em->setConfig($config);
     }
 
     private function obtemNamespace(){
-
-        $path = getcwd()."\\module\\$this->modulo\\src\\$this->modulo\\Entity"; 
+        
+        $pasta = ($this->type_service == self::TYPE_SERVICE)? 'Service' :'Entity';
+        
+        $path = getcwd()."\\module\\$this->modulo\\src\\$this->modulo\\$pasta"; 
 
         if(PHP_OS != 'WINNT'){
             $path = str_replace('\\', '/', $path);
@@ -169,9 +184,10 @@ class ServiceManager {
         
         $iterator = new \RecursiveDirectoryIterator($path);
         $recursiveIterator = new \RecursiveIteratorIterator($iterator);
+
         $service = FALSE;
         foreach ( $recursiveIterator as $entry ) {
-            if($entry->getFilename() == $this->entity.'.php'){
+            if($entry->getFilename() == $this->servico.'.php'){
                 $service = "$this->modulo\\Entity".substr($entry->getPathname(), strlen($path), -4);
                 if(PHP_OS != 'WINNT'){
                     $service = str_replace('\\', '/', $service);
@@ -179,14 +195,15 @@ class ServiceManager {
                 break;
             }
         }
+        
         return $service;
     }
     
     private function geraArrayConfig($namespace){
         $model_class = str_replace('Entity', 'Model', $namespace);
-        $namespace_exp = explode('\\', $namespace);
-        $tabela = array_pop($namespace_exp);
-        
+        $tabela_exp = explode('\\', $namespace);
+        $tabela = array_pop($tabela_exp);
+
         $table_name = strtolower($tabela[0]);
         for($i=1; $i<strlen($tabela);$i++){
             $char = $tabela[$i];
