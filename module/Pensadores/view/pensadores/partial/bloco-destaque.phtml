@@ -4,10 +4,13 @@ $tipo_bloco = 'paisagem';
 $categoria = $coluna['ctg_apelido'];
 
 $cor = '#D89D33';
+$icone = $this->basePath() . '/img/id-visual/mente-circle.svg';
 if($categoria == 'pensando-coracao'){
     $cor = '#C270AD';
+    $icone = $this->basePath() . '/img/id-visual/coracao-circle.svg';
 } else if($categoria == 'pensando-biblia') {
     $cor = '#2D84C6';
+    $icone = $this->basePath() . '/img/id-visual/biblia-circle.svg';
 }
 ?>
 <style>
@@ -23,13 +26,13 @@ if($categoria == 'pensando-coracao'){
 <?php if($tipo_bloco == 'paisagem'):?>
 <li>
     <div class="text-center no-padding" style="height: 353px">
-        <div class="col-md-30 icone-categoria text-center"><img src="<?=$this->basePath() . '/img/id-visual/mente-circle.svg'?>" /></div>
+        <div class="col-md-30 icone-categoria text-center"><img src="<?=$icone?>" /></div>
         <img style="max-height: 228px; margin-top: 2px" src="<?= $coluna['col_end_imagem'] ?>" />
         <div class="col-md-30">
             <div class="text-justify clear bloco-titulo col-md-20" ><?= $coluna['col_titulo'] ?></div>
             <div id="col_dest_detalhes" class="text-right" >
-                <div><i>'Por Autor da Coluna'</i></div>
-                <div><i>Há 5 min.</i></div>
+                <div>Por <i><?= $coluna['usr_nome'].' '.$coluna['usr_sobrenome'] ?></i></div>
+                <div>Em <i><?= $coluna['col_data_postagem'] ?></i></div>
             </div>
             <div class="text-right">
                 <a href="/coluna/<?=$coluna['ctg_apelido']?>/<?=$coluna['col_id']?>">
@@ -47,7 +50,7 @@ if($categoria == 'pensando-coracao'){
 <li>
     <div class="text-center no-padding" style="height: 353px">
         <div class="col-md-15" style="height: 354px; background: black; overflow: hidden">
-            <div id="col_dest_end_imagem" class="retrato" style="padding: 0;"><img src="<?=$this->basePath() . '/img/id-visual/mente-circle.svg'?>" /></div>
+            <div id="col_dest_end_imagem" class="retrato" style="padding: 0;"><img src="<?=$icone?>" /></div>
         </div>
         <div class="col-md-15">
             <div class="col-md-30 text-center icone-categoria"><img src="<?= $coluna['col_end_imagem'] ?>" /></div>

@@ -15,6 +15,6 @@ class ColunasController extends ControllerGenerico {
     protected function buscaColuna($col_id){
         $srv_vcolunas = $this->p()->getEntity('Coluna','VColColuna');
         $coluna = $this->objetosParaArray( $srv_vcolunas->getAllByColId($col_id) );
-        return $coluna;
+        return $coluna[0];
     }
 }

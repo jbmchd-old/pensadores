@@ -1,6 +1,41 @@
 <?php
 $coluna = $this->coluna;
-echo '<pre>';
-print_r($coluna);
-die();
 ?>
+
+<style>
+    #coluna{
+        background: #EEE;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 10px;
+            
+    }
+    
+    #col_titulo{
+        font-size: 2.7em;
+    }
+    
+    #col_citacao p{
+        margin: 0;
+    }
+    
+    #col_texto{
+        font-size: 1.3em;
+    }
+    #col_texto:first-letter{
+        font-size: 4em;
+    }
+    #col_texto:first-letter{
+        line-height: 0
+    }
+</style>
+
+<div id="coluna" class="col-md-18 col-md-push-7">
+    <div id="col_titulo" class="col-md-30 text-center"> <?= $coluna['col_titulo'] ?> </div>
+    <blockquote id="col_citacao" class="text-right">
+        <footer>Por <cite><?= $coluna['usr_nome'].' '.$coluna['usr_sobrenome'] ?></cite></footer>
+        <footer>Em <?= $coluna['col_data_postagem'] ?></footer>
+    </blockquote>
+    <div id="col_texto" class="text-justify "> <?= $coluna['col_texto'] ?> </div>
+    
+</div>

@@ -11,3 +11,17 @@ else:
 exibir colunas da categoria
 
 <?php endif; ?>
+
+<script>
+    $(function (){
+        $(".navbar .icone-categoria img[data-original-title!='Pensando com a Cabeça']").hide();
+        $(".navbar .icone-categoria img[data-original-title='Pensando com a Cabeça']")
+                .attr('src','/img/id-visual/coracao-circle.svg')
+                .parent()
+                .removeClass('col-md-9')
+                .addClass('col-md-push-10 col-md-11')
+                .append('<div style="color: #FDFDFE; font-size:1.2em">Pensando com o Coração<div>');
+        $('#container-topo').css({'border-bottom':'1px solid #C270AD'});
+        
+    })
+</script>
