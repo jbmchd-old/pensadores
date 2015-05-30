@@ -35,7 +35,7 @@ class AuthenticateController extends ControllerGenerico {
         $autenticaService = $this->getServiceLocator()->get('Acesso\Service\Authenticate');
         $autenticaService->destroiSessao();
         if($redirect){
-            return $this->redirect()->toUrl('/acesso/login');
+            return $this->redirect()->toUrl('/');
         }
             
     }

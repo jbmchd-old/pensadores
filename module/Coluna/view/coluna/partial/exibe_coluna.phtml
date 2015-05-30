@@ -7,7 +7,7 @@ $coluna = $this->coluna;
         background: #EEE;
         margin-top: 20px;
         margin-bottom: 20px;
-        padding: 10px;
+        padding: 20px;
             
     }
     
@@ -30,12 +30,12 @@ $coluna = $this->coluna;
     }
 </style>
 
-<div id="coluna" class="col-md-18 col-md-push-7">
+<div id="coluna" class="col-md-18 col-md-push-6">
     <div id="col_titulo" class="col-md-30 text-center"> <?= $coluna['col_titulo'] ?> </div>
     <blockquote id="col_citacao" class="text-right">
         <footer>Por <cite><?= $coluna['usr_nome'].' '.$coluna['usr_sobrenome'] ?></cite></footer>
         <footer>Em <?= $coluna['col_data_postagem'] ?></footer>
     </blockquote>
-    <div id="col_texto" class="text-justify "> <?= $coluna['col_texto'] ?> </div>
+    <div id="col_texto" class="text-justify "> <?= nl2br($coluna['col_texto']) ?> </div>
     
 </div>

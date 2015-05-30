@@ -1,3 +1,4 @@
+<div id="voltar" class="col-md-1 col-md-push-5 text-center" style="color: #2D84C6; cursor: pointer"><i class="fa fa-arrow-circle-left fa-2x"></i></div>
 <?php 
 if(isset($this->coluna)): 
     $coluna = $this->coluna;
@@ -22,5 +23,6 @@ exibir colunas da categoria
                 .addClass('col-md-pull-10 col-md-11')
                 .append('<div style="color: #FDFDFE; font-size:1.2em">Pensando com a Bíblia<div>');
         $('#container-topo').css({'border-bottom':'1px solid #2D84C6'})
+        $('#voltar').css('top', $(window).height()/2 ).click(function (){window.location='/'})
     })
 </script>

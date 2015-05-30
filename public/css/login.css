@@ -21,7 +21,7 @@
 
 body {
   background: #000;
-  color: #606468;
+  color: #D89D33;
   font: 87.5%/1.5em 'Open Sans', sans-serif;
   margin: 0;
 }
@@ -104,7 +104,7 @@ p {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   transition: background ease 0.3s;
-  background: #359e9b;
+  background: #D89D33;
   color: #eee;
   font-weight: bold;
   margin-bottom: 2em;
@@ -113,7 +113,7 @@ p {
 }
 
 #login form input[type="submit"]:hover {
-  background-color: #167f7a;
+  background-color: #B17C2B;
 }
 
 #login > p {

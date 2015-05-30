@@ -8,6 +8,9 @@ if(isset($this->messageLogin)){
 }
 
 ?>
+<style>
+    
+</style>
 <html>
     <head>
         <meta charset="utf-8">
@@ -21,14 +24,19 @@ if(isset($this->messageLogin)){
     <body>
         <div class="container">
 
-            <div id="login" style="margin: 0 auto">
+            <div id="login" class="text-center" style="margin: 0 auto">
                 <?php if($this->sessao()->isLogged()) : ?>
                 <div>Você está logado!</div>
-                <div><a href="/acesso/logout">Deslogar</a></div>
+                <div id="logout" class="text-center" style="color: #C270AD;">
+                    <a href="/acesso/logout">
+                        <i class="fa fa-sign-out fa-2x"></i>
+                    </a>
+                </div>
                 
                 <?php else : ?>     
                 <form method="POST" id="form_login" action="/acesso/login">
-                    <fieldset class="clearfix">
+                    <fieldset class="clearfix text-center">
+                        <div style="font-weight: bold">Acesso restrito a colunistas</div>
                         <p><span class="fontawesome-user"></span><input type="text" placeholder="Usuário" name="user" id="user" data-obrigatorio /></p> <!-- JS because of IE support; better: placeholder="Username" -->
                         <p><span class="fontawesome-lock"></span><input type="password" placeholder="Senha" name="pass" id="pass" data-obrigatorio /></p> <!-- JS because of IE support; better: placeholder="Password" -->
                         <p><input type="submit" value="Entrar"></p>

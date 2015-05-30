@@ -78,7 +78,7 @@ $usuario = $this->usuario;
                         </div>
                     </form>
 
-                    <form id="form_coluna" action="#" method="POST">
+                    <form id="form_coluna" action="#" method="POST" enctype="multipart/form-data">
                         <div class="form-group col-md-15">
                             <label>Título*</label>
                             <input type="text" name="col_titulo" class="form-control" placeholder="Título" data-obrigatorio />
@@ -205,11 +205,19 @@ $usuario = $this->usuario;
     
     $('#form_coluna').submit(function (){
         $('input[name=col_id]').val(col_id);
+        var formData = new FormData(this);
+//        console.log(formData);
         $.ajax({
             url:'/coluna/admin/save',
-            data: $(this).serializeArray()            
+            data:formData,
+            cache:false,
+            contentType: false,
+            processData: false,
         }).done(function (result){
-            if( ! result.hasOwnProperty('col_id')){
+            coluna = result.coluna;
+            imagem = result.imagem;
+            
+            if( ! coluna.hasOwnProperty('col_id')){
                 $().alert("Ocorreu algum problema ao postar a coluna, verifique.")
             }
             
@@ -218,14 +226,14 @@ $usuario = $this->usuario;
             var acao = '';
             if(col_id){
                 acao = 'alterada';
-                $('#tb_exibe_colunas tr[data-col_id='+result.col_id+'] td:nth-child(2)').html(result.col_titulo);
+                $('#tb_exibe_colunas tr[data-col_id='+coluna.col_id+'] td:nth-child(2)').html(coluna.col_titulo);
             } else {
                 acao = 'inserida';
                 
                 $('#tb_exibe_colunas tbody').prepend('\
-                                            <tr data-col_id="'+result.col_id+'" class="'+getCorFundoTr(result.ctg_id)+'">\
-                                                <td class="text-right">'+result.col_id+'</td>\
-                                                <td>'+result.col_titulo+'</td>\
+                                            <tr data-col_id="'+coluna.col_id+'" class="'+getCorFundoTr(coluna.ctg_id)+'">\
+                                                <td class="text-right">'+coluna.col_id+'</td>\
+                                                <td>'+coluna.col_titulo+'</td>\
                                                 <td class="text-center"><button type="button" class="btn btn-warning btn-editar"><i class="fa fa-edit"></i></button></td>\
                                                 <td class="text-center"><button type="button" class="btn btn-danger btn-excluir"><i class="fa fa-times"></i></button></td>\
                                             </tr>');
@@ -234,10 +242,17 @@ $usuario = $this->usuario;
                 $('#tb_exibe_colunas').find('tbody tr:first button.btn-excluir').click(eventoExcluirClick)
             }
             
+            var message = 'Coluna '+ acao +' com sucesso!';
+            var type = 'success';
+            
+            if(imagem !== true && imagem!='branco'){
+                message = 'Coluna '+ acao +' com sucesso, mas ocorreu algum problema com a imagem.';
+                type = 'warning';
+            }
             
             $($('#colunista_alerta')).showMessageTarge({
-                message: 'Coluna '+ acao +' com sucesso!',
-                type: 'success'
+                message: message,
+                type: type
             });
             
             atualizaTamanhoContainerColunas()
@@ -303,7 +318,7 @@ $usuario = $this->usuario;
     
     function atualizaTamanhoContainerColunas(){
         var qtd_colunas = $('#tb_exibe_colunas tbody tr').length;
-        var novo_tamanho = 96+ (qtd_colunas * 40);
+        var novo_tamanho = 96+ (qtd_colunas * 45);
         $('#container_colunas').css('height',novo_tamanho)
     }
     

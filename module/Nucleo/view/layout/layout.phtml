@@ -82,6 +82,10 @@
         #login a:link, #login a:visited, #login a:hover, #login a:active{
             color: #D89D33;
         }
+        
+        #logout a:link, #logout a:visited, #logout a:hover, #logout a:active{
+            color: #C270AD;
+        }
     </style>
     <body>
         <div class="row" id="container-topo">
@@ -97,7 +101,11 @@
                     <div class="col-md-9 icone-categoria text-center"><img data-ctg='pensando_biblia' src="<?=$this->basePath() . '/img/id-visual/biblia-circle.svg'?>" /></div>
                 </div>
                 <div class="col-md-1" style="position: absolute; right: 1%; top: 30px">
-                    <div id="login" class="col-md-9 icone-categoria text-center" style="color: #D89D33;"><a href="/acesso/login"><i class="fa fa-sign-in fa-2x"></i></a></div>
+                    <?php if ($this->sessao()->isLogged()): ?>
+                        <div id="logout" class="col-md-9 text-center" style="color: #C270AD;"><a href="/acesso/logout"><i class="fa fa-sign-out fa-2x"></i></a></div>
+                    <?php else: ?>
+                        <div id="login" class="col-md-9 text-center" style="color: #D89D33;"><a href="/acesso/login"><i class="fa fa-sign-in fa-2x"></i></a></div>
+                    <?php endif; ?>
                 </div>
             </nav>
         </div>

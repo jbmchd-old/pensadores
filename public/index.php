@@ -3,9 +3,13 @@
  /**
   * Display all errors when APPLICATION_ENV is development.
   */
- if ($_SERVER['APPLICATION_ENV'] == 'development') {
-     error_reporting(E_ALL);
-     ini_set("display_errors", 1);
+
+ if ($_SERVER['ENVIROMENT'] == 'development') {
+    mb_internal_encoding('UTF-8');
+    error_reporting(E_ALL);
+    ini_set("display_errors",2);
+    ini_set('error_reporting', E_ALL | E_STRICT);
+    ini_set('upload_max_filesize', '30720000');
  }
 
 /**
