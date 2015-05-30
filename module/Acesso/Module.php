@@ -88,15 +88,11 @@ class Module
         } else if ( !$authenticateService->hasIdentity()){
             $controller->redirect()->toRoute("acesso/login");
         } else {
-            echo '<pre>';
-            print_r('autenticou');
-            die();
             $controlador = $controller->params()->fromRoute('controller');
             $action      = $controller->params()->fromRoute('action');
             $user        = $authenticateService->getIdentity()['usuario'];
-            $autorizacao = new \Acesso\Service\Autorizacao( $em );     
             
-            $esta_autorizado = $autorizacao->isAcesso($controlador, $action, $user);
+            $esta_autorizado = TRUE;
             
             if ( ! $esta_autorizado ) { 
                 return $controller->redirect()->toRoute("acesso/nao-autorizado", array('controlador' => $controlador, 'acao' => $action));

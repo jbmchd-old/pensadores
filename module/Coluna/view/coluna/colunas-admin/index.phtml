@@ -1,0 +1,311 @@
+<?php
+$colunas = $this->colunas;
+$categorias = $this->categorias;
+$usuario = $this->usuario;
+//echo '<pre>';
+//print_r($usuario);
+//die();
+?>
+
+<style>
+    #container_colunas{
+        background: #EEE;
+        padding: 0;
+        font-size: 1.1em;
+        height: 96px; 
+        margin-top: 20px;
+        /*padding: 15px*/
+    }
+    
+    #btn_nova_coluna, #tb_exibe_colunas{
+        margin: 0 15px;
+    }
+    
+</style>
+
+<div id="container_colunas" class="col-md-18 col-md-push-7" >
+    
+    <span id="colunista_alerta" style="border-radius: 0; font-size: 0.8em;" class="hide"></span>
+    
+    <button type="button" id="btn_nova_coluna" class="btn btn-primary" style=" margin-top: 20px">Nova Coluna...</button>
+    <table id="tb_exibe_colunas" class="table table-bordered table-condensed" style="margin-top: 20px; background: white; width: 97%">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Título</th>
+                <th>Editar</th>
+                <th>Excluir</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($colunas as $coluna): 
+                $class_bg = 'warning';
+                if($coluna['ctg_apelido'] == 'pensando-coracao'){
+                    $class_bg = 'danger';
+                } else if($coluna['ctg_apelido'] == 'pensando-biblia') {
+                    $class_bg = 'info';
+                }
+            ?>
+            <tr data-col_id="<?= $coluna['col_id']?>" class="<?=$class_bg?>">
+                    <td class="text-right"><?= $coluna['col_id'] ?></td>
+                    <td><?= $coluna['col_titulo'] ?></td>
+                    <td class="text-center"><button type="button" class="btn btn-warning btn-editar"><i class="fa fa-edit"></i></button></td>
+                    <td class="text-center"><button type="button" class="btn btn-danger btn-excluir"><i class="fa fa-times"></i></button></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal_colunas" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="btn btn-danger"><i class="fa fa-times"></i></span></button>
+                    <h4 class="modal-title" style="font-weight: bold">Nova coluna...</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form class="form-horizontal">
+                        <div class="form-group" style="margin-bottom: 0">
+                            <label class="col-md-2" style="margin-right: 5px">Colunista: </label>
+                            <div class="col-md-22"> <?= $usuario['usr_nome'].' '.$usuario['usr_sobrenome'].' ('.$usuario['usr_login'].')' ?></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1" style="margin-right: 5px">Data:</label>
+                            <div class="col-md-22"> <?= date('d/m/Y H:m') ?></div>
+                        </div>
+                    </form>
+
+                    <form id="form_coluna" action="#" method="POST">
+                        <div class="form-group col-md-15">
+                            <label>Título*</label>
+                            <input type="text" name="col_titulo" class="form-control" placeholder="Título" data-obrigatorio />
+                        </div>
+                        <div class="form-group col-md-10">
+                            <label>Imagem</label>
+                            <input type="file" name="col_imagem" class="form-control" placeholder="Imagem" />
+                        </div>
+                        <div class="clear form-group col-md-10">
+                            <label>Categoria*</label>
+                            <select name="ctg_id" class="form-control"  data-obrigatorio>
+                                <option value="0">Selecione...</option>
+                                <?php foreach ($categorias as $categoria) : ?>
+                                    <option value="<?= $categoria['ctg_id'] ?>"><?= $categoria['ctg_nome'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+
+                        </div>
+                        <div class="form-group col-md-30">
+                            <label>Texto*</label>
+                            <textarea name="col_texto" class="form-control" rows="25" placeholder="Texto" data-obrigatorio></textarea>
+                        </div>
+                        <div class="form-group col-md-15">
+                            <label>Resumo</label>
+                            <textarea name="col_resumo" class="form-control" rows="5" placeholder="Resumo"></textarea>
+                        </div>
+                        <div class="form-group col-md-15">
+                            <label>Observação:</label>
+                            <textarea name="col_observacao" class="form-control" rows="5" placeholder="Observação"></textarea>
+                        </div>
+                        <input type="hidden" name="col_id" />
+                    </form>
+                </div>
+                <div class="clear modal-footer">
+                    <button id="btn_enviar_coluna" class="btn btn-primary" disabled>Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    
+    var colunas = <?= (sizeof($colunas)) ?  json_encode($colunas) : "" ?> 
+    var col_id = 0;
+    var col_titulo = "";
+    var col_texto = "";
+    var ctg_id = "";
+    
+    var eventoEditarClick = function (){
+        col_id = $(this).parents('tr').attr('data-col_id');
+        var col_dados = buscaColuna(col_id);
+        preencheModalColunas(col_dados);
+        verificaCamposObrigatorios();
+        ativaSalvar();
+        abreModalColunas();
+    }
+    
+    var eventoExcluirClick = function (botao){
+        $().confirm({
+            text: 'Tem certeza que deseja excluir esta coluna?',
+            yes: function (){
+                col_id = $(botao.target).parents('tr').attr('data-col_id');
+                $.ajax({
+                    url:'/coluna/admin/excluir',
+                    data:{col_id:col_id}
+                }).done(function (result){
+                    if( ! result[0]){
+                        $($('#colunista_alerta')).showMessageTarge({
+                            message: 'Ocorreu algum erro ao excluir a coluna, verifique!',
+                            type: 'danger'
+                        });
+                    }
+                    
+                    $('#tb_exibe_colunas tr[data-col_id='+col_id+']').remove();
+                    col_id = 0;
+                    
+                    $($('#colunista_alerta')).showMessageTarge({
+                        message: 'Coluna excluída com sucesso!',
+                        type: 'success'
+                    });
+                    atualizaTamanhoContainerColunas()
+                });
+            },
+            no: function (){
+                $($('#colunista_alerta')).showMessageTarge({
+                    message: 'Ação cancelada, nada foi alterado.',
+                    type: 'warning'
+                });
+            }
+        });
+    }
+    
+    $('#btn_nova_coluna').click(function (){
+        col_id = 0;
+        limpaFormColuna();
+        verificaCamposObrigatorios();
+        ativaSalvar();
+        abreModalColunas();
+    });
+    
+    $('.btn-editar').click(eventoEditarClick);
+    
+    $('.btn-excluir').click(eventoExcluirClick);
+    
+    $('#form_coluna input[name=col_titulo]').keyup(function (e){
+        col_titulo = $(this).val();
+        ativaSalvar();
+    });
+    
+    $('#form_coluna textarea[name=col_texto]').keyup(function (e){
+        col_texto = $(this).val();
+        ativaSalvar();
+    });
+    
+    $('#form_coluna select[name=ctg_id]').change(function (){
+        ctg_id = $(this).val()
+        ativaSalvar();
+    });
+    
+    $('#btn_enviar_coluna').click(function (){$('#form_coluna').submit()})
+    
+    $('#form_coluna').submit(function (){
+        $('input[name=col_id]').val(col_id);
+        $.ajax({
+            url:'/coluna/admin/save',
+            data: $(this).serializeArray()            
+        }).done(function (result){
+            if( ! result.hasOwnProperty('col_id')){
+                $().alert("Ocorreu algum problema ao postar a coluna, verifique.")
+            }
+            
+            $('#modal_colunas').modal('hide');
+            
+            var acao = '';
+            if(col_id){
+                acao = 'alterada';
+                $('#tb_exibe_colunas tr[data-col_id='+result.col_id+'] td:nth-child(2)').html(result.col_titulo);
+            } else {
+                acao = 'inserida';
+                
+                $('#tb_exibe_colunas tbody').prepend('\
+                                            <tr data-col_id="'+result.col_id+'" class="'+getCorFundoTr(result.ctg_id)+'">\
+                                                <td class="text-right">'+result.col_id+'</td>\
+                                                <td>'+result.col_titulo+'</td>\
+                                                <td class="text-center"><button type="button" class="btn btn-warning btn-editar"><i class="fa fa-edit"></i></button></td>\
+                                                <td class="text-center"><button type="button" class="btn btn-danger btn-excluir"><i class="fa fa-times"></i></button></td>\
+                                            </tr>');
+                                                    
+                $('#tb_exibe_colunas').find('tbody tr:first button.btn-editar').click(eventoEditarClick)
+                $('#tb_exibe_colunas').find('tbody tr:first button.btn-excluir').click(eventoExcluirClick)
+            }
+            
+            
+            $($('#colunista_alerta')).showMessageTarge({
+                message: 'Coluna '+ acao +' com sucesso!',
+                type: 'success'
+            });
+            
+            atualizaTamanhoContainerColunas()
+            
+        });
+        return false;
+    });
+    
+    function preencheModalColunas(col_dados){
+        $.each(col_dados, function (key, dados){
+            $('#form_coluna [name='+key+']').val(dados);
+        });
+        col_id = col_dados.col_id;
+        $('#modal_colunas .modal-title').html(col_dados.col_titulo);
+    }
+    
+    function buscaColuna(col_id){
+        var col_dados = {};
+        $.each(colunas, function (key, coluna){
+            if(coluna.col_id == col_id){
+                col_dados = coluna;
+                return false;
+            }
+        });
+        return col_dados;
+    }
+    
+    function limpaFormColuna(){
+        $('#form_coluna').find('textarea, input:text, input:hidden').val('');
+        $('#form_coluna').find('select').val(0);
+        $('#modal_colunas .modal-title').html('Nova coluna...');
+    }
+    
+    function verificaCamposObrigatorios(){
+        $('#form_coluna').find('textarea, [type=text]').keyup();
+        $('#form_coluna').find('select').change();
+    }
+    
+    function abreModalColunas(){
+        $('#modal_colunas').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+    
+    function getCorFundoTr(ctg_id){
+        cor_fundo = 'warning';
+        if(ctg_id == 2){
+            cor_fundo = 'danger';
+        } else if(ctg_id == 3){
+            cor_fundo = 'info';
+        }
+        return cor_fundo;
+    }
+    
+    function ativaSalvar(){
+        if(col_titulo && col_texto && ctg_id>0){
+            $('#btn_enviar_coluna').prop('disabled',false) 
+        } else {
+            $('#btn_enviar_coluna').prop('disabled',true) ;
+        }
+    }
+    
+    function atualizaTamanhoContainerColunas(){
+        var qtd_colunas = $('#tb_exibe_colunas tbody tr').length;
+        var novo_tamanho = 96+ (qtd_colunas * 40);
+        $('#container_colunas').css('height',novo_tamanho)
+    }
+    
+    atualizaTamanhoContainerColunas();
+</script>

@@ -79,7 +79,9 @@
             margin-right: 20px
         }
         
-
+        #login a:link, #login a:visited, #login a:hover, #login a:active{
+            color: #D89D33;
+        }
     </style>
     <body>
         <div class="row" id="container-topo">
@@ -90,9 +92,12 @@
                     </a>
                 </div>
                 <div class="col-md-10 col-md-offset-3" style="margin-top: 15px">
-                    <div class="col-md-9 icone-categoria text-center"><img src="<?=$this->basePath() . '/img/id-visual/mente-circle.svg'?>" /></div>
-                    <div class="col-md-9 icone-categoria text-center"><img src="<?=$this->basePath() . '/img/id-visual/coracao-circle.svg'?>" /></div>
-                    <div class="col-md-9 icone-categoria text-center"><img src="<?=$this->basePath() . '/img/id-visual/biblia-circle.svg'?>" /></div>
+                    <div class="col-md-9 icone-categoria text-center"><img data-ctg='pensando_cabeca' src="<?=$this->basePath() . '/img/id-visual/mente-circle.svg'?>" /></div>
+                    <div class="col-md-9 icone-categoria text-center"><img data-ctg='pensando_coracao' src="<?=$this->basePath() . '/img/id-visual/coracao-circle.svg'?>" /></div>
+                    <div class="col-md-9 icone-categoria text-center"><img data-ctg='pensando_biblia' src="<?=$this->basePath() . '/img/id-visual/biblia-circle.svg'?>" /></div>
+                </div>
+                <div class="col-md-1" style="position: absolute; right: 1%; top: 30px">
+                    <div id="login" class="col-md-9 icone-categoria text-center" style="color: #D89D33;"><a href="/acesso/login"><i class="fa fa-sign-in fa-2x"></i></a></div>
                 </div>
             </nav>
         </div>

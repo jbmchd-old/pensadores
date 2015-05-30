@@ -23,7 +23,9 @@ if(isset($this->messageLogin)){
 
             <div id="login" style="margin: 0 auto">
                 <?php if($this->sessao()->isLogged()) : ?>
-                <span>Você está logado!</span>
+                <div>Você está logado!</div>
+                <div><a href="/acesso/logout">Deslogar</a></div>
+                
                 <?php else : ?>     
                 <form method="POST" id="form_login" action="/acesso/login">
                     <fieldset class="clearfix">

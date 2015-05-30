@@ -20,10 +20,11 @@ class AuthenticateController extends ControllerGenerico {
                     'cod'=>$dados['cod'], 
                     'messageLogin' => 'Usuario/senha incorretos.'
                 ];
+            } else {
+                return $this->redirect()->toUrl('/coluna/admin');
             }
-            echo '<pre>';
-            print_r('logou luxo');
-            die();
+            
+            
         }
         
         return new ViewModel($retorno);

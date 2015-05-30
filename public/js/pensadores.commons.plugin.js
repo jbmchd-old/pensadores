@@ -207,6 +207,7 @@ function estaDefinido($var, com_conteudo){
     var formatacaoClass = function (obj){
         var obj = obj;
         function tabela(){
+            return true;
             tabela = obj;
             if($(tabela).prop('tagName')==='TABLE'){
                 $(tabela.selector).find('tbody td[data-tipo=currency]').autoNumeric('init', { aSign: 'R$ ', nBracket: '(.)', });

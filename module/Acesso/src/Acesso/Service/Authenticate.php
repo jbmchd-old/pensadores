@@ -101,15 +101,12 @@ class Authenticate extends GenericService {
         $result = $this->authenticateService->authenticate($this->authenticateAdapter);
         if ($result->isValid()) {
             
-            $cod_usuario = $result->getIdentity()['acs_usuario']->getUsrId();
-            $usuario = $result->getIdentity()['acs_usuario']->getUsrLogin();
-            
+            $identity = $result->getIdentity()['acs_usuario'];
+
             $dados = array(
-                'usuario' => [
-                    'cod_usuario' => $cod_usuario,
-                    'usuario' => $usuario,
-                ]
+                'usuario' => $result->getIdentity()['acs_usuario']->toArray()
             );
+            unset($dados['usuario']['usr_senha']);
             
             $this->escreveSessao($dados);
             
@@ -150,27 +147,6 @@ class Authenticate extends GenericService {
         return $this->authenticateService->getIdentity();
     }
 
-    private function buscaUsuarioAplicativos($cod_usuario) {
-        $srv_usuario_aplicativos = $this->getEntity('Acesso', 'DwvUsuarioAplicativosUnidade');
-        $aplicativos_raw = $srv_usuario_aplicativos->getAllByCodUsuario($cod_usuario);
-        $aplicativos_raw = $this->objetosParaArray($aplicativos_raw);
-        $aplicativos = [];
-        foreach ($aplicativos_raw as $cada_app) {
-            $cod_aplicativo = $cada_app['cod_sistema'];
-            $cod_unid = $cada_app['cod_unidade'];
-            
-            $aplicativos[$cod_aplicativo]['cod_sistema'] = $cada_app['cod_sistema'];
-            $aplicativos[$cod_aplicativo]['nome'] = $cada_app['nome'];
-            $aplicativos[$cod_aplicativo]['acesso_dpc_online'] = $cada_app['acesso_dpc_online'];
-
-            $aplicativos[$cod_aplicativo]['unidades'][$cod_unid]['cod_unidade'] = $cod_unid;
-            $aplicativos[$cod_aplicativo]['unidades'][$cod_unid]['acesso_liberado'] = $cada_app['acesso_liberado'];
-            $aplicativos[$cod_aplicativo]['unidades'][$cod_unid]['acesso_local'] = $cada_app['acesso_local'];
-            $aplicativos[$cod_aplicativo]['unidades'][$cod_unid]['acesso_remoto'] = $cada_app['acesso_remoto'];
-        }
-        
-        return $aplicativos;
-    }
 }
 
 ?>

@@ -26,6 +26,20 @@ return [
                             ],
                         ],
                     ],
+                    'colunas-admin' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/admin[/:action]',
+                            'constraints' => [
+                                'controller'=> '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'=> '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ],
+                            'defaults' => [
+                                'controller'    => 'ColunasAdmin',
+                                'action'        => 'index',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -38,6 +52,7 @@ return [
     ],
     'controllers' => [
         'invokables' => [
+            'Coluna\Controller\ColunasAdmin' => 'Coluna\Controller\ColunasAdminController',
             'Coluna\Controller\Colunas' => 'Coluna\Controller\ColunasController',
             'Coluna\Controller\PensandoCabeca' => 'Coluna\Controller\PensandoCabecaController',
             'Coluna\Controller\PensandoCoracao' => 'Coluna\Controller\PensandoCoracaoController',
