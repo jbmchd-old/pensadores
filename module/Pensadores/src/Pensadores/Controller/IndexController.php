@@ -7,8 +7,7 @@ use Nucleo\Controller\ControllerGenerico;
 
 class IndexController extends ControllerGenerico{
     
-    public function indexAction()
-    {
+    public function indexAction(){
         $srv_vcolunas_ultimas = $this->p()->getEntity('Coluna','VColUltimasPostadas');
         $col_ultimas = $this->objetosParaArray($srv_vcolunas_ultimas->getAll());
         

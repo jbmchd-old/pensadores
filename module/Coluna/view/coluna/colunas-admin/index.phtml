@@ -206,7 +206,6 @@ $usuario = $this->usuario;
     $('#form_coluna').submit(function (){
         $('input[name=col_id]').val(col_id);
         var formData = new FormData(this);
-//        console.log(formData);
         $.ajax({
             url:'/coluna/admin/save',
             data:formData,
@@ -214,6 +213,7 @@ $usuario = $this->usuario;
             contentType: false,
             processData: false,
         }).done(function (result){
+            console.log(result);
             coluna = result.coluna;
             imagem = result.imagem;
             
@@ -262,6 +262,7 @@ $usuario = $this->usuario;
     });
     
     function preencheModalColunas(col_dados){
+        $('input:file').val('');
         $.each(col_dados, function (key, dados){
             $('#form_coluna [name='+key+']').val(dados);
         });
@@ -281,7 +282,8 @@ $usuario = $this->usuario;
     }
     
     function limpaFormColuna(){
-        $('#form_coluna').find('textarea, input:text, input:hidden').val('');
+        
+        $('#form_coluna').find('textarea, input:text, input:hidden, input:file').val('');
         $('#form_coluna').find('select').val(0);
         $('#modal_colunas .modal-title').html('Nova coluna...');
     }

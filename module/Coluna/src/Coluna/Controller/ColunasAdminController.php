@@ -52,9 +52,15 @@ class ColunasAdminController extends ControllerGenerico {
             $result['coluna'] = $entity_coluna->toArray();
             if (sizeof($files)){
                 $result['imagem'] = $this->saveImage($files['col_imagem'], $col_id);
+                if($result === TRUE){
+                    $result['coluna']['col_end_imagem'] = 'col_'.$col_id;
+                    $entity_coluna = $srv_colunas->create($result['coluna']);
+                    $entity_coluna = $srv_colunas->save($entity_coluna);
+                }
             }
         } 
         
+        $result['temp'] = $entity_coluna->toArray();
         
         return new JsonModel($result);
         
@@ -81,7 +87,7 @@ class ColunasAdminController extends ControllerGenerico {
         }
         
         $valid_file = true;
-        $result = 'ok';
+        $result = '';
         $type = explode('/', $array_files['type']);
         $ext = '.'.array_pop($type);
         $novo_nome = strtolower('col_'.$col_id.$ext); //rename file
