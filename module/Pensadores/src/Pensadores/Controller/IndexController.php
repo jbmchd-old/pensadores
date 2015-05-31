@@ -17,12 +17,28 @@ class IndexController extends ControllerGenerico{
         $colunas = [];
         foreach ($col_ultimas as $key => $cada_coluna) {
             $col_ultimas[$key]['col_titulo']        = ucfirst(mb_strtolower($cada_coluna['col_titulo']));
-            $col_ultimas[$key]['col_end_imagem']    = $this->basePath().'img/colunas/imagem_padrao_coluna_paisagem2.jpg';
+            if(empty($cada_coluna['col_end_imagem'])){
+                $col_ultimas[$key]['col_end_imagem']    = $this->basePath().'img/colunas/imagem_padrao_coluna_paisagem.jpg';
+                $col_ultimas[$key]['orient_imagem'] = 'paisagem';
+            } else {
+                $col_ultimas[$key]['col_end_imagem'] = $this->basePath().'img/colunas/'.$cada_coluna['col_end_imagem'].'.jpeg';
+                $col_ultimas[$key]['orient_imagem'] = $this->getOrientacao($col_ultimas[$key]['col_end_imagem'] );
+            }
         }
         
         return new ViewModel([
             'ultimas_colunas' => $col_ultimas,
             'colunas' => $col_sem_ultimas
         ]);
+    }
+    
+    private function getOrientacao($endereco){
+        $img_dados = getimagesize(getcwd().'\\public\\'.$endereco);
+        $orientacao = 'retrato';
+        if($img_dados[0]/$img_dados[1]>1.5){
+            $orientacao = 'paisagem';
+        } 
+        
+        return $orientacao;
     }
 }

@@ -36,6 +36,10 @@ $coluna = $this->coluna;
         <footer>Por <cite><?= $coluna['usr_nome'].' '.$coluna['usr_sobrenome'] ?></cite></footer>
         <footer>Em <?= $coluna['col_data_postagem'] ?></footer>
     </blockquote>
+    <?php if( !empty($coluna['col_end_imagem'])):?>
+    <div class="col-md-10 float-right">
+        <img style="width: 100%;" src="<?= $this->basePath().'/img/colunas/'.$coluna['col_end_imagem'].'.jpeg'?>" />
+    </div>
+    <?php endif;?>
     <div id="col_texto" class="text-justify "> <?= nl2br($coluna['col_texto']) ?> </div>
-    
 </div>
