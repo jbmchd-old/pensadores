@@ -31,20 +31,24 @@
     $colunas = $this->colunas;
     ?>
     
-<div id="slider" class="bloco bloco-destaque col-md-9">
+<!--<div id="slider" class="bloco bloco-destaque col-md-9">
     
     <div style="background: linear-gradient(to right, #D89D33, #C270AD, #2D84C6); height: 4px"></div>
     
     <ul class="bjqs">
         <?php
             foreach ($ultimas_colunas as $coluna) {
-                echo $this->partial('bloco/destaque',['coluna'=>$coluna]);
+                //echo $this->partial('bloco/destaque',['coluna'=>$coluna]);
             }
         ?>
     </ul>
-</div>
+</div>-->
 
-
+    <?php
+        foreach ($ultimas_colunas as $coluna) {
+            echo $this->partial('bloco/comum',['coluna'=>$coluna]);
+        }
+    ?>
     <?php
         foreach ($colunas as $coluna) {
             echo $this->partial('bloco/comum',['coluna'=>$coluna]);
