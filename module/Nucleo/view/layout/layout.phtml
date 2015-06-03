@@ -1,4 +1,11 @@
-<?php echo $this->doctype(); ?>
+<?php 
+if($_SERVER['HTTP_HOST']=='ospensadores.com'){
+    $this->plugin('basePath')->setBasePath('/public/');
+}
+
+echo $this->doctype(); 
+
+?>
 
 <html lang="en">
     <head>
