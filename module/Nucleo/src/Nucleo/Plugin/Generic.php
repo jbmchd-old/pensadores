@@ -22,6 +22,10 @@ class Generic extends AbstractPlugin {
         $service = $this->getController()->getServiceLocator()->get('Nucleo\ServiceManager')->getService($module, $service_name, ServiceManager::TYPE_SERVICE);
         return $service;
     }
+    
+    public function getCaminhoUniversal($caminho_raw){
+        return str_replace('\\', DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR, $caminho_raw));
+    }
 
     public function getResponseReason($cod) {
         $resposta = [

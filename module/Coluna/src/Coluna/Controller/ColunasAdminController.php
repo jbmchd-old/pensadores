@@ -53,9 +53,11 @@ class ColunasAdminController extends ControllerGenerico {
         if ((int) $col_id) {
             $result['coluna'] = $entity_coluna->toArray();
             if (sizeof($files)) {
-                $result['imagem'] = $this->saveImage($files['col_imagem'], $col_id);
-                if ($result === TRUE) {
-                    $result['coluna']['col_end_imagem'] = 'col_' . $col_id;
+                $nome_arq = strtolower('col_' . $col_id); 
+                $caminho = $this->p()->getCaminhoUniversal(getcwd() . '/public/img/colunas/');
+                $result['imagem'] = $this->saveImage($files['col_imagem'], $caminho, $nome_arq );
+                if (file_exists($result['imagem']['caminho'])) {
+                    $result['coluna']['col_end_imagem'] = str_replace(getcwd().DIRECTORY_SEPARATOR, '', $result['imagem']['caminho']);
                     $entity_coluna = $srv_colunas->create($result['coluna']);
                     $entity_coluna = $srv_colunas->save($entity_coluna);
                 }
@@ -77,36 +79,45 @@ class ColunasAdminController extends ControllerGenerico {
 
         $col_id = $request->getPost()->toArray()['col_id'];
         $srv_colunas = $this->p()->getEntity('Coluna', 'ColColuna');
-        $result = $srv_colunas->removeByColId($col_id);
-        $this->backupBD();
+        $entity = $srv_colunas->getByColId($col_id);
+        if(get_class($entity) == 'Coluna\Entity\ColColuna'){
+            $file = $this->p()->getCaminhoUniversal(getcwd().DIRECTORY_SEPARATOR.$entity->getColEndImagem());
+            $result = $srv_colunas->removeByColId($col_id);
+            if($result && file_exists($file)){
+                unlink($file);
+            }
+            
+            $this->backupBD();
+            
+        }
         return new JsonModel([$result]);
     }
 
-    private function saveImage($array_files, $col_id) {
+    private function saveImage($array_files, $caminho, $nome_arq) {
 
         if (empty($array_files['tmp_name'])) {
             return 'branco';
         }
 
         $valid_file = true;
-        $result = '';
+        $result['message'] = 'tudo ok';
         $type = explode('/', $array_files['type']);
         $ext = '.' . array_pop($type);
-        $novo_nome = strtolower('col_' . $col_id . $ext); //rename file
-        $endereco = getcwd() . '\\public\\img\\colunas\\' . $novo_nome;
-        $endereco = str_replace('\\', DIRECTORY_SEPARATOR, $endereco);
+        $caminho_completo = $caminho.$nome_arq.$ext;
         //can't be larger than 3 MB
         if ($array_files['size'] > (3072000)) {
             $valid_file = false;
-            $message = 'Imagem muito grande. Escolha outra.';
+            $result['message'] = 'Imagem muito grande. Escolha outra.';
         }
 
         //if the file has passed the test
         if ($valid_file) {
             //move it to where we want it to be
-            $result = move_uploaded_file($array_files['tmp_name'], $endereco);
-            if (!$result) {
-                $message = 'Ocorreu algum problema ao inserir a imagem';
+            $result['result'] = move_uploaded_file($array_files['tmp_name'], $caminho_completo);
+            if ($result) {
+                $result['caminho'] = $caminho_completo;
+            } else {
+                $result['message'] = 'Ocorreu algum problema ao inserir a imagem';
             }
         }
 
@@ -209,8 +220,7 @@ class ColunasAdminController extends ControllerGenerico {
             //save file
             $nome_arq = 'mysqldump_' . date('Y-m-d_H-i');
             $destino = getcwd().'/data/mysqldump/';
-            $destino_completo = $destino.$nome_arq.'.zip';
-            $destino_completo = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR, $destino_completo));
+            $destino_completo = $this->p()->getCaminhoUniversal($destino.$nome_arq.'.zip');
             $this->stringToZip($destino, $nome_arq, $output);
             
             if(file_exists($destino_completo) and filesize($destino_completo)){
@@ -232,5 +242,5 @@ class ColunasAdminController extends ControllerGenerico {
         ));
         return $filter->filter($string);
     }
-
+    
 }

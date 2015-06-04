@@ -91,9 +91,13 @@ abstract class ControllerGenerico extends AbstractActionController {
         return $merge_unique;
     }
     
-    protected function basePath(){
+    protected function atualPath(){
         $server = $this->getRequest()->getServer()->toArray();
         return $server['REQUEST_URI'];
+    }
+    
+    protected function basePath($complemento=''){
+        return '/public/'.$complemento;
     }
     
 }
