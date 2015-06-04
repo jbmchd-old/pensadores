@@ -33,7 +33,7 @@ class IndexController extends ControllerGenerico{
     }
     
     private function getOrientacao($endereco){
-        $img_dados = getimagesize(getcwd().'\\public\\'.$endereco);
+        $img_dados = getimagesize(getcwd().'/public/'.$endereco);
         $orientacao = 'retrato';
         if($img_dados[0]/$img_dados[1]>1.5){
             $orientacao = 'paisagem';

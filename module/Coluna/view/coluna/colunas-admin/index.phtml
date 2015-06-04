@@ -2,12 +2,10 @@
 $colunas = $this->colunas;
 $categorias = $this->categorias;
 $usuario = $this->usuario;
-//echo '<pre>';
-//print_r($usuario);
-//die();
 ?>
 
 <style>
+    
     #container_colunas{
         background: #EEE;
         padding: 0;
@@ -21,14 +19,19 @@ $usuario = $this->usuario;
         margin: 0 15px;
     }
     
+    .table { width: 92%; }
+    
+    @media (min-width: 992px) {
+        .table { width: 97%; }
+    }
 </style>
 
-<div id="container_colunas" class="col-md-18 col-md-push-7" >
+<div id="container_colunas" class="col-xs-29" >
     
     <span id="colunista_alerta" style="border-radius: 0; font-size: 0.8em;" class="hide"></span>
     
     <button type="button" id="btn_nova_coluna" class="btn btn-primary" style=" margin-top: 20px">Nova Coluna...</button>
-    <table id="tb_exibe_colunas" class="table table-bordered table-condensed" style="margin-top: 20px; background: white; width: 97%">
+    <table id="tb_exibe_colunas" class="table table-bordered table-condensed col-xs-29" style="margin-top: 20px; background: white;">
         <thead>
             <tr>
                 <th>#</th>

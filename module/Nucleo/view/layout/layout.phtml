@@ -32,6 +32,7 @@ echo $this->doctype();
                 ->prependFile($this->basePath() . '/vendor/jquery/1.11.2.min.js');
         
         echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/id-visual/favicon.ico'))
+                ->prependStylesheet($this->basePath() . '/css/global-responsive.css')
                 ->prependStylesheet($this->basePath() . '/css/global.css')
                 ->prependStylesheet($this->basePath() . '/vendor/outros/css/normalize.css')
                 ->prependStylesheet($this->basePath() . '/vendor/jquery.slider.master/bjqs.css')
@@ -49,19 +50,20 @@ echo $this->doctype();
     <style>
         
         @import url(http://fonts.googleapis.com/css?family=Roboto);
-
+        
         html, body {
             height: 100%
         }
         
         body{
             background: black;
-            font-family: Roboto
+            font-family: Roboto;
+            min-width: 400px;
         }
         
         /*OUTROS ELEMENTOS*/
         #container-topo{
-            height: 90px;
+            /*height: 90px;*/
             margin: 0;
             border-bottom: 1px solid #D89D33;
         }
@@ -70,56 +72,74 @@ echo $this->doctype();
         .navbar {
             background: none;
             border: none;
+            margin: 7px;
         }
         
         .container-fluid {
             /*max-width: 1350px;*/
-            max-width: 1550px;
-            min-width: 550px;
             height: 725px;
+            max-width: 1550px;
+            /*min-width: 400px;*/
         }
 
-        .row {
-            margin-left: 15px;
-            margin-right: 20px
+        .layout-icones-categoria{
+            margin-top: 10px;
         }
         
-        #login a:link, #login a:visited, #login a:hover, #login a:active{
+        .layout-icone-logar{
+            position: absolute; 
+            right: 1%; 
+        }
+        
+        #logar a:link, #logar a:visited, #logar a:hover, #logar a:active{
             color: #D89D33;
         }
         
         #logout a:link, #logout a:visited, #logout a:hover, #logout a:active{
             color: #C270AD;
         }
+        
+        @media (min-width: 1300px) {
+            .layout-icones-categoria{
+                margin-top: 18px;
+            }
+        }
+        
+        @media (min-width: 1500px) {
+            .layout-icones-categoria{
+                margin-top: 25px;
+            }
+        }
+        
     </style>
     <body>
-        <div class="row" id="container-topo">
+        <div id="container-topo">
             <nav class="navbar navbar-inverse">
-                <div class="col-md-6 col-md-offset-2">
+                <div class="col-xs-20 col-md-6 col-md-offset-2 col-xs-push-4 layout-logo-principal">
                     <a href="/">
-                        <img style="width: 97%" src="<?=$this->basePath() . '/img/id-visual/logo_completa.svg'?>" />
+                        <img src="<?=$this->basePath() . '/img/id-visual/logo_completa.png'?>" />
                     </a>
                 </div>
-                <div class="col-md-10 col-md-offset-3" style="margin-top: 15px">
-                    <div class="col-md-9 icone-categoria text-center"><img data-ctg='pensando_cabeca' src="<?=$this->basePath() . '/img/id-visual/mente-circle.svg'?>" /></div>
-                    <div class="col-md-9 icone-categoria text-center"><img data-ctg='pensando_coracao' src="<?=$this->basePath() . '/img/id-visual/coracao-circle.svg'?>" /></div>
-                    <div class="col-md-9 icone-categoria text-center"><img data-ctg='pensando_biblia' src="<?=$this->basePath() . '/img/id-visual/biblia-circle.svg'?>" /></div>
+                <div class="col-md-10 col-md-offset-3 layout-icones-categoria">
+                    <div class="col-xs-5 col-md-9 col-xs-offset-7 col-md-offset-1 icone-categoria text-center"><img data-ctg='pensando-cabeca' src="<?=$this->basePath() . '/img/id-visual/mente-circle.svg'?>" /></div>
+                    <div class="col-xs-5 col-md-9 icone-categoria text-center"><img data-ctg='pensando-coracao' src="<?=$this->basePath() . '/img/id-visual/coracao-circle.svg'?>" /></div>
+                    <div class="col-xs-5 col-md-9 icone-categoria text-center"><img data-ctg='pensando-biblia' src="<?=$this->basePath() . '/img/id-visual/biblia-circle.svg'?>" /></div>
                 </div>
-                <div class="col-md-1" style="position: absolute; right: 1%; top: 30px">
+                <div class="layout-icone-logar">
                     <?php if ($this->sessao()->isLogged()): ?>
-                        <div id="logout" class="col-md-9 text-center" style="color: #C270AD;"><a href="/acesso/logout"><i class="fa fa-sign-out fa-2x"></i></a></div>
+                        <div id="logout" class="text-center" style="color: #C270AD;"><a href="/acesso/logout"><i class="fa fa-sign-out fa-2x"></i></a></div>
                     <?php else: ?>
-                        <div id="login" class="col-md-9 text-center" style="color: #D89D33;"><a href="/acesso/login"><i class="fa fa-sign-in fa-2x"></i></a></div>
+                        <div id="logar" class="text-center" style="color: #D89D33;"><a href="/acesso/login"><i class="fa fa-sign-in fa-2x"></i></a></div>
                     <?php endif; ?>
                 </div>
             </nav>
         </div>
         
-        <div class="container-fluid">
+        <div class="container-fluid col-xs-offset-1 col-sm-offset-2">
         
-            <div class="row" id="container-body">
+            <!--<div class="row" id="container-body">-->
                 <?php echo $this->content; ?>
-            </div>
+            <!--</div>-->
             
         </div> <!-- /container -->
 

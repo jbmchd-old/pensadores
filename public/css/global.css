@@ -25,3 +25,20 @@ Azul hover: #1C6693
 .clear {clear:both}
 .float-right {float: right}
 
+/*Clases específicas (mobile first)*/
+.coluna-voltar {
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: black;
+    width: 60px;
+    height: 60px;
+    left: -30px;
+    top: -30px;
+}
+.coluna-voltar i{
+    padding: 48% 42%;
+}
+
+.layout-logo-principal {text-align: center}
+.layout-logo-principal img {max-width: 100%}
+.layout-icone-logar{ margin-top: 11% }

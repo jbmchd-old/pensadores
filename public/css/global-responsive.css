@@ -1,0 +1,9 @@
+
+@media (min-width: 992px) {
+    .layout-logo-principal {text-align: left}
+    .layout-logo-principal img {max-width: 100%}
+    .layout-icone-logar{ margin-top: 2% }
+}
+@media (min-width: 1700px) {
+    .container-fluid{margin: 0 auto;}
+}
