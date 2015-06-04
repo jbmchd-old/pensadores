@@ -1,7 +1,6 @@
 <?php
-if($_SERVER['HTTP_HOST']=='ospensadores.com'){
-    $this->plugin('basePath')->setBasePath('/public/');
-}
+$this->plugin('basePath')->setBasePath('/public/');
+
 echo $this->headLink(array('rel' => 'shortcut icon', 'href' => $this->basePath() . '/img/'))
         ->prependStylesheet($this->basePath() . '/css/login.css');
 
