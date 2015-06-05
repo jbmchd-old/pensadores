@@ -221,7 +221,7 @@ class ColunasAdminController extends ControllerGenerico {
             $nome_arq = 'mysqldump_' . date('Y-m-d_H-i');
             $destino = getcwd().'/data/mysqldump/';
             $destino_completo = $this->p()->getCaminhoUniversal($destino.$nome_arq.'.zip');
-            $this->stringToZip($destino, $nome_arq, $output);
+            $this->sqlToZip($destino, $nome_arq, $output);
             
             if(file_exists($destino_completo) and filesize($destino_completo)){
                 return true;
@@ -233,14 +233,16 @@ class ColunasAdminController extends ControllerGenerico {
         }
     }
     
-    private function stringToZip($caminho, $nome_arq, $string){
-        $filter = new \Zend\Filter\Compress(array(
-            'adapter' => 'Zip',
-            'options' => array(
-                'archive' => $caminho.$nome_arq.'.zip',
-            ),
-        ));
-        return $filter->filter($string);
+    private function sqlToZip($caminho, $nome_arq, $string){
+        $zip = new \ZipArchive();
+        $filename = $this->p()->getCaminhoUniversal($caminho.$nome_arq.'.zip');
+        if ($zip->open($filename, \ZipArchive::CREATE)!==TRUE) {
+            exit("cannot open <$filename>\n");
+        }
+        $zip->addFromString($nome_arq.'.sql', $string);
+        $num_files = $zip->numFiles;
+        $zip->close();
+        return $num_files;
     }
     
 }
