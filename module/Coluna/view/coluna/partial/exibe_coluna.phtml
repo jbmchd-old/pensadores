@@ -1,6 +1,11 @@
 
 <?php
 $coluna = $this->coluna;
+
+$coluna['col_texto'] = nl2br($coluna['col_texto']);
+$coluna['col_texto'] = str_replace('<br />', '</p><p>', $coluna['col_texto']);
+$coluna['col_texto'] = '<p>'.$coluna['col_texto'].'</p>';
+
 $categoria = $coluna['ctg_apelido'];
 
 $cor = '#D89D33';
@@ -54,6 +59,9 @@ if($categoria == 'pensando-coracao'){
     #col_texto:first-letter{
         line-height: 0
     }
+    #col_texto p {
+        text-indent: 25px
+    }
     
     .coluna-voltar{
         color: <?=$cor?>;
@@ -72,7 +80,7 @@ if($categoria == 'pensando-coracao'){
         <img style="width: 100%;" src="<?= $this->basePath().'/img/colunas/'.$coluna['col_end_imagem'].'.jpeg'?>" />
     </div>-->
     <?php endif;?>
-    <div id="col_texto" class="text-justify "> <?= nl2br($coluna['col_texto']) ?> </div>
+    <div id="col_texto" class="text-justify "> <?= $coluna['col_texto']; ?> </div>
 </div>
 
 <script>
