@@ -52,7 +52,7 @@ class ColunasAdminController extends ControllerGenerico {
 
         if ((int) $col_id) {
             $result['coluna'] = $entity_coluna->toArray();
-            if (sizeof($files)) {
+            if ($files['col_imagem']['size']) {
                 $nome_arq = strtolower('col_' . $col_id); 
                 $caminho = $this->p()->getCaminhoUniversal(getcwd() . '/public/img/colunas/');
                 $result['imagem'] = $this->saveImage($files['col_imagem'], $caminho, $nome_arq );
@@ -101,6 +101,11 @@ class ColunasAdminController extends ControllerGenerico {
 
         $valid_file = true;
         $result['message'] = 'tudo ok';
+        $result = [
+            'message' => 'tudo ok',
+            'caminho' => '',
+            'result' => false
+        ];
         $type = explode('/', $array_files['type']);
         $ext = '.' . array_pop($type);
         $caminho_completo = $caminho.$nome_arq.$ext;

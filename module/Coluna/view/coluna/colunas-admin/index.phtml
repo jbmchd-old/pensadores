@@ -248,7 +248,7 @@ $usuario = $this->usuario;
             var message = 'Coluna '+ acao +' com sucesso!';
             var type = 'success';
             
-            if( ! imagem.hasOwnProperty('caminho')){
+            if(typeof imagem != 'undefined' && ! imagem.hasOwnProperty('caminho')){
                 message = 'Coluna '+ acao +' com sucesso, mas ocorreu algum problema com a imagem.';
                 type = 'warning';
             }
