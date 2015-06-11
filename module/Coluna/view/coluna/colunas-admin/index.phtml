@@ -1,4 +1,5 @@
 <?php
+$this->plugin('basePath')->setBasePath('/public/');
 $colunas = $this->colunas;
 $categorias = $this->categorias;
 $usuario = $this->usuario;
@@ -134,7 +135,25 @@ $usuario = $this->usuario;
                 </div>
 
             </div>
-            <div class="tab-pane" id="dicas">...123</div>
+            <div class="tab-pane" id="dicas">
+                <div class="text-center clear">
+                    <h3>Imagens para divulgação/postagem:</h3>
+                    <div class="col-md-offset-0  text-left">
+                        <ul>
+                            <li>Dica para postagens rápidas (windows): baixe as imagens, acesse o site "http://bannerfans.com/banner_maker.php" (em breve, tutorial) , faça o upload da imagem coloque o texto desejado, personalize, salve ou compartilhe a imagem.</li>
+                            <li>Dica para postagens rápidas (celular): baixe as imagens, no aplicativo "No Crop" , faça o upload da imagem, coloque o texto desejado, personalize se quiser, salve ou compartilhe a imagem.</li>
+                            <li>Obs 1: Ao priorizar essas imagens você estará divulgando junto com o conteúdo da postagem: A logo, a identidade visual, a categoria da postagem e as 3 principais fontes de informação que temos (site, facebook e instagram)</li>
+                            <li>Obs 2: As imagens estão pequenas apenas na exibição do site, pode usar que quando salvar, serão salvas no tamanho original de 768x768 (bem grande rs)</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-offset-2">
+                        <img class="col-xs-15 col-md-7" src="<?=$this->basePath()?>/img/divulgacao/post-inst-redes.png" />
+                        <img class="col-xs-15 col-md-7" src="<?=$this->basePath()?>/img/divulgacao/post-inst-cab-1.png" />
+                        <img class="col-xs-15 col-md-7" src="<?=$this->basePath()?>/img/divulgacao/post-inst-cor-1.png" />
+                        <img class="col-xs-15 col-md-7" src="<?=$this->basePath()?>/img/divulgacao/post-inst-bib-1.png" />
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -338,11 +357,16 @@ $usuario = $this->usuario;
         }
     }
     
-    function atualizaTamanhoContainerColunas(){
-        var qtd_colunas = $('#tb_exibe_colunas tbody tr').length;
-        var novo_tamanho = 96+ (qtd_colunas * 45);
-        $('#container_colunas').css('height',novo_tamanho)
-    }
     
-    atualizaTamanhoContainerColunas();
+    
+    $(function (){
+        function atualizaTamanhoContainerColunas(){
+//            var qtd_colunas = $('#tb_exibe_colunas tbody tr').length;
+//            var novo_tamanho = 96+120+ (qtd_colunas * 45);
+            var novo_tamanho = 500;
+            $('#container_colunas').css('height',novo_tamanho)
+        }
+
+        atualizaTamanhoContainerColunas();
+    });
 </script>
