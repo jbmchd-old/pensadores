@@ -1,5 +1,6 @@
 
 <?php
+$this->plugin('basePath')->setBasePath('/public/');
 $coluna = $this->coluna;
 
 $coluna['col_texto'] = nl2br($coluna['col_texto']);
@@ -67,7 +68,7 @@ if($categoria == 'pensando-coracao'){
         color: <?=$cor?>;
     }
 </style>
-
+<!--<img width="150" height="150" src="<?=$this->basePath()?>/img/id-visual/pensadores.png">-->
 <div id="coluna" class="col-xs-29 ">
     <div class="col-xs-1 text-center coluna-voltar"><i class="fa fa-arrow-circle-left fa-2x"></i></a></div>
     <div id="col_titulo" class="col-md-30 text-center"> <?= $coluna['col_titulo'] ?> </div>
