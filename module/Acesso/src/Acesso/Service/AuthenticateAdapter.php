@@ -50,7 +50,7 @@ class AuthenticateAdapter extends \Nucleo\Service\GenericService implements Adap
     }
  
     public function setPasswd($passwd) {
-        $this->passwd = $passwd;
+        $this->passwd = sha1($passwd);
     }
  
     /**
