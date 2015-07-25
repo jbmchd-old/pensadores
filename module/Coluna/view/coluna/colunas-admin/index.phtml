@@ -1,6 +1,8 @@
 <?php
 $this->plugin('basePath')->setBasePath('/public/');
 $colunas = $this->colunas;
+$series = $this->series;
+$col_com_filhos_id = $this->col_com_filhos_id;
 $categorias = $this->categorias;
 $usuario = $this->usuario;
 ?>
@@ -102,6 +104,7 @@ $usuario = $this->usuario;
                                         <label>Imagem</label>
                                         <input type="file" name="col_imagem" class="form-control" placeholder="Imagem"  />
                                     </div>
+                                    
                                     <div class="clear form-group col-md-10">
                                         <label>Categoria*</label>
                                         <select name="ctg_id" class="form-control"  data-obrigatorio>
@@ -112,6 +115,17 @@ $usuario = $this->usuario;
                                         </select>
 
                                     </div>
+                                    
+                                    <div class=" form-group col-md-10">
+                                        <label>Série</label>
+                                        <select name="col_pai_id" id="series" class="form-control">
+                                            <option value="0">Selecione a coluna pai</option>
+                                            <?php foreach ($series as $serie) : ?>
+                                                <option value="<?= $serie['col_id'] ?>"><?= $serie['col_titulo'] ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    
                                     <div class="form-group col-md-30">
                                         <label>Texto*</label>
                                         <textarea name="col_texto" class="form-control" rows="25" placeholder="Texto" data-obrigatorio></textarea>
@@ -163,7 +177,9 @@ $usuario = $this->usuario;
 
 <script>
     
-    var colunas = <?= (sizeof($colunas)) ?  json_encode($colunas) : "''" ?> 
+    var colunas = <?= (sizeof($colunas)) ?  json_encode($colunas) : "[]" ?> 
+    var col_com_filhos_id = <?= (sizeof($col_com_filhos_id)) ?  json_encode($col_com_filhos_id) : "[]" ?> 
+    
     var col_id = 0;
     var col_titulo = "";
     var col_texto = "";
@@ -216,10 +232,24 @@ $usuario = $this->usuario;
     function preencheModalColunas(col_dados){
         $('input:file').val('');
         $.each(col_dados, function (key, dados){
+            dados = (key === 'col_pai_id' && dados==null)?0:dados;
             $('#form_coluna [name='+key+']').val(dados);
         });
+        
         col_id = col_dados.col_id;
         $('#modal_colunas .modal-title').html(col_dados.col_titulo);
+        
+        //oculta da lista de colunas para serie, a coluna selecionada
+        $('#series option[value='+col_id+']').hide();
+        $('#series :not(option[value='+col_id+'])').show();
+        
+        if( col_com_filhos_id.indexOf(col_dados.col_id)>-1 ){
+            $('#series').prop('disabled',true);
+            $('#series option:first').html('Está coluna já é uma série.');
+        } else {
+            $('#series').prop('disabled',false);
+            $('#series option:first').html('Selecione a coluna pai');
+        }
     }
     
     function buscaColuna(col_id){
@@ -281,12 +311,12 @@ $usuario = $this->usuario;
         atualizaTamanhoContainerColunas();
         
         $('#btn_nova_coluna').click(function (){
-        col_id = 0;
-        limpaFormColuna();
-        verificaCamposObrigatorios();
-        ativaSalvar();
-        abreModalColunas();
-    });
+            col_id = 0;
+            limpaFormColuna();
+            verificaCamposObrigatorios();
+            ativaSalvar();
+            abreModalColunas();
+        });
     
         $('.btn-editar').click(eventoEditarClick);
 
@@ -320,14 +350,30 @@ $usuario = $this->usuario;
                 processData: false,
             }).done(function (result){
                 
+                console.log(result);
+                return false;
+               
                 coluna = result.coluna;
+                serie = result.serie;
                 imagem = result.imagem;
                 
                 if( ! coluna.hasOwnProperty('col_id')){
-                    $().alert("Ocorreu algum problema ao postar a coluna, verifique.")
+                    $().alert("Ocorreu algum problema ao postar a coluna, verifique.");
                 }
 
                 $('#modal_colunas').modal('hide');
+
+                if(serie.hasOwnProperty('ser_id')){
+                    col_com_filhos_id.push(serie.col_id.toString());
+                    $(colunas).each(function (i, cada_coluna){
+                        if(cada_coluna.col_id===serie.col_filho_id){
+                            colunas[i]['ser_id'] = serie.serie_id;
+                            colunas[i]['col_pai_id'] = serie.col_id;
+                            colunas[i]['ser_ordem'] = serie.ser_ordem;
+                            return;
+                        }
+                    });
+                }
 
                 var acao = '';
                 if(col_id){
@@ -341,14 +387,12 @@ $usuario = $this->usuario;
                         if(cada_coluna.col_id === col_id){
                             for(campo in cada_coluna){
                                 colunas[i][campo] = coluna[campo];
-                                $('#tb_exibe_colunas tbody tr[data-col_id'+col_id+']')
+                                $('#tb_exibe_colunas tbody tr[data-col_id'+col_id+']');
+                                return;
                             }
 
                         }
                     })
-
-    //                console.log(coluna);
-    //                console.log(colunas);
                 } else {
                     acao = 'inserida';
 

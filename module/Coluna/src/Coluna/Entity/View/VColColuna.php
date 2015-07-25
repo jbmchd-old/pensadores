@@ -21,6 +21,9 @@ class VColColuna extends GenericEntity {
     private $chvNome;
     private $ctgNome;
     private $ctgApelido;
+    private $serId;
+    private $col_pai_id;
+    private $ser_ordem;
     private $usrLogin;
     private $usrSenha;
     private $usrEmail;

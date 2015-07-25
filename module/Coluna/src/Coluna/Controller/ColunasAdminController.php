@@ -9,18 +9,34 @@ use Nucleo\Controller\ControllerGenerico;
 class ColunasAdminController extends ControllerGenerico {
 
     public function indexAction() {
+        $srv_vcolunas = $this->p()->getEntity('Coluna', 'VColColuna');
+        $srv_vcol_series = $this->p()->getEntity('Coluna', 'VColSerie');
+        
+        
         $sessao = $this->sessao()->getArrayCopy();
         $usuario = $sessao['storage']['usuario'];
 
         $colunista_cod = $usuario['usr_id'];
-        $srv_vcolunas = $this->p()->getEntity('Coluna', 'VColColuna');
         $colunas_raw = $this->objetosParaArray($srv_vcolunas->getAllByUsrId($colunista_cod));
+        
+        $col_series = $this->objetosParaArray($srv_vcol_series->getAllByUsrId($colunista_cod));
+        $col_com_filhos_id = [];
 
+        foreach ($colunas_raw as $cada) {
+            if((int) $cada['ser_id'] != 0){
+                $col_com_filhos_id[]=$cada['col_pai_id'];
+            }
+        }
+        
+        $col_com_filhos_id = array_unique($col_com_filhos_id);        
+        
         $srv_categoria = $this->p()->getEntity('Coluna', 'ColCategoria');
         $categorias_raw = $this->objetosParaArray($srv_categoria->getAll());
 
         return new ViewModel([
             'colunas' => $colunas_raw,
+            'series' => $col_series,
+            'col_com_filhos_id' => $col_com_filhos_id,
             'categorias' => $categorias_raw,
             'usuario' => $usuario,
         ]);
@@ -36,6 +52,8 @@ class ColunasAdminController extends ControllerGenerico {
         $files = $request->getFiles()->toArray();
 
         $dados = $request->getPost()->toArray();
+        
+        
         if ((int) $dados['col_id'] > 0) {
             $dados['col_data_modificacao'] = date('Y-m-d H:i:s');
         } else {
@@ -44,12 +62,15 @@ class ColunasAdminController extends ControllerGenerico {
         }
         $dados['usr_id'] = $this->sessao()->getArrayCopy()['storage']['usuario']['usr_id'];
         $dados['col_status'] = 'A';
-
+        
+        $col_pai_id = $dados['col_pai_id'];
+        unset($dados['col_pai_id']);
+        
         $srv_colunas = $this->p()->getEntity('Coluna', 'ColColuna');
         $entity_coluna = $srv_colunas->create($dados);
+        
         $entity_coluna = $srv_colunas->save($entity_coluna);
         $col_id = $entity_coluna->getColId();
-
         if ((int) $col_id) {
             $result['coluna'] = $entity_coluna->toArray();
             if ($files['col_imagem']['size']) {
@@ -62,10 +83,13 @@ class ColunasAdminController extends ControllerGenerico {
                     $entity_coluna = $srv_colunas->save($entity_coluna);
                 }
             }
+            
+            $result['serie'] = $this->criaSerie($col_pai_id, $col_id);
+            
             $this->backupBD();
         }
 
-        $result['temp'] = $entity_coluna->toArray();
+//        $result['temp'] = $entity_coluna->toArray();
 
         return new JsonModel($result);
     }
@@ -96,6 +120,22 @@ class ColunasAdminController extends ControllerGenerico {
             
         }
         return new JsonModel([$result]);
+    }
+
+    private function criaSerie($pai_id, $filho_id){
+        
+        if((int) $pai_id>0){
+            $srv_series = $this->p()->getEntity('Coluna', 'ColSerie');
+            $entity_ser = $srv_series->create([
+                'ser_id'=>false,
+                'col_id'=>$pai_id,
+                'col_filho_id'=>$filho_id,
+                'ser_ordem'=>(int) $srv_series->getByColIdOrderBySerOrdemDesc($pai_id)+1,
+            ]);
+            $entity_ser = $srv_series->save($entity_ser);
+            return $entity_ser->toArray();
+        }
+        
     }
 
     private function saveImage($array_files, $caminho, $nome_arq) {
