@@ -76,17 +76,22 @@ class ColunasAdminController extends ControllerGenerico {
         if (!$request->isPost()) {
             return false;
         }
-
+        
         $col_id = $request->getPost()->toArray()['col_id'];
         $srv_colunas = $this->p()->getEntity('Coluna', 'ColColuna');
         $entity = $srv_colunas->getByColId($col_id);
+        $file = '';
         if(get_class($entity) == 'Coluna\Entity\ColColuna'){
-            $file = $this->p()->getCaminhoUniversal(getcwd().DIRECTORY_SEPARATOR.$entity->getColEndImagem());
-            $result = $srv_colunas->removeByColId($col_id);
-            if($result && file_exists($file)){
-                unlink($file);
-            }
             
+            $result = $srv_colunas->removeByColId($col_id);
+            if( ! empty($entity->getColEndImagem())){
+                $file = $this->p()->getCaminhoUniversal(getcwd().DIRECTORY_SEPARATOR.$entity->getColEndImagem());
+                if($result && file_exists($file)){
+                    unlink($file);
+                }
+                
+            }
+           
             $this->backupBD();
             
         }

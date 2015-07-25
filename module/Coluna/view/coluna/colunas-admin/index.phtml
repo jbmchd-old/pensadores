@@ -98,9 +98,9 @@ $usuario = $this->usuario;
                                         <label>Título*</label>
                                         <input type="text" name="col_titulo" class="form-control" placeholder="Título" data-obrigatorio />
                                     </div>
-                                    <div class="form-group col-md-10">
+                                    <div class="form-group col-md-10 hide">
                                         <label>Imagem</label>
-                                        <input type="file" name="col_imagem" class="form-control" placeholder="Imagem" />
+                                        <input type="file" name="col_imagem" class="form-control" placeholder="Imagem"  />
                                     </div>
                                     <div class="clear form-group col-md-10">
                                         <label>Categoria*</label>
@@ -213,93 +213,6 @@ $usuario = $this->usuario;
         });
     }
     
-    $('#btn_nova_coluna').click(function (){
-        col_id = 0;
-        limpaFormColuna();
-        verificaCamposObrigatorios();
-        ativaSalvar();
-        abreModalColunas();
-    });
-    
-    $('.btn-editar').click(eventoEditarClick);
-    
-    $('.btn-excluir').click(eventoExcluirClick);
-    
-    $('#form_coluna input[name=col_titulo]').keyup(function (e){
-        col_titulo = $(this).val();
-        ativaSalvar();
-    });
-    
-    $('#form_coluna textarea[name=col_texto]').keyup(function (e){
-        col_texto = $(this).val();
-        ativaSalvar();
-    });
-    
-    $('#form_coluna select[name=ctg_id]').change(function (){
-        ctg_id = $(this).val()
-        ativaSalvar();
-    });
-    
-    $('#btn_enviar_coluna').click(function (){$('#form_coluna').submit()})
-    
-    $('#form_coluna').submit(function (){
-        $('input[name=col_id]').val(col_id);
-        var formData = new FormData(this);
-        $.ajax({
-            url:'/coluna/admin/save',
-            data:formData,
-            cache:false,
-            contentType: false,
-            processData: false,
-        }).done(function (result){
-            console.log(result);
-            coluna = result.coluna;
-            imagem = result.imagem;
-            
-            if( ! coluna.hasOwnProperty('col_id')){
-                $().alert("Ocorreu algum problema ao postar a coluna, verifique.")
-            }
-            
-            $('#modal_colunas').modal('hide');
-            
-            var acao = '';
-            if(col_id){
-                acao = 'alterada';
-                $('#tb_exibe_colunas tr[data-col_id='+coluna.col_id+'] td:nth-child(2)').html(coluna.col_titulo);
-            } else {
-                acao = 'inserida';
-                
-                $('#tb_exibe_colunas tbody').prepend('\
-                                            <tr data-col_id="'+coluna.col_id+'" class="'+getCorFundoTr(coluna.ctg_id)+'">\
-                                                <td class="text-right">'+coluna.col_id+'</td>\
-                                                <td>'+coluna.col_titulo+'</td>\
-                                                <td class="text-center"><button type="button" class="btn btn-warning btn-editar"><i class="fa fa-edit"></i></button></td>\
-                                                <td class="text-center"><button type="button" class="btn btn-danger btn-excluir"><i class="fa fa-times"></i></button></td>\
-                                            </tr>');
-                                                    
-                $('#tb_exibe_colunas').find('tbody tr:first button.btn-editar').click(eventoEditarClick)
-                $('#tb_exibe_colunas').find('tbody tr:first button.btn-excluir').click(eventoExcluirClick)
-            }
-            
-            var message = 'Coluna '+ acao +' com sucesso!';
-            var type = 'success';
-            
-            if(typeof imagem != 'undefined' && ! imagem.hasOwnProperty('caminho')){
-                message = 'Coluna '+ acao +' com sucesso, mas ocorreu algum problema com a imagem.';
-                type = 'warning';
-            }
-            
-            $($('#colunista_alerta')).showMessageTarge({
-                message: message,
-                type: type
-            });
-            
-            atualizaTamanhoContainerColunas()
-            
-        });
-        return false;
-    });
-    
     function preencheModalColunas(col_dados){
         $('input:file').val('');
         $.each(col_dados, function (key, dados){
@@ -357,16 +270,117 @@ $usuario = $this->usuario;
         }
     }
     
-    
-    
-    $(function (){
-        function atualizaTamanhoContainerColunas(){
+    function atualizaTamanhoContainerColunas(){
 //            var qtd_colunas = $('#tb_exibe_colunas tbody tr').length;
 //            var novo_tamanho = 96+120+ (qtd_colunas * 45);
             var novo_tamanho = 500;
             $('#container_colunas').css('height',novo_tamanho)
         }
-
+    
+    $(function (){
         atualizaTamanhoContainerColunas();
+        
+        $('#btn_nova_coluna').click(function (){
+        col_id = 0;
+        limpaFormColuna();
+        verificaCamposObrigatorios();
+        ativaSalvar();
+        abreModalColunas();
+    });
+    
+        $('.btn-editar').click(eventoEditarClick);
+
+        $('.btn-excluir').click(eventoExcluirClick);
+
+        $('#form_coluna input[name=col_titulo]').keyup(function (e){
+            col_titulo = $(this).val();
+            ativaSalvar();
+        });
+
+        $('#form_coluna textarea[name=col_texto]').keyup(function (e){
+            col_texto = $(this).val();
+            ativaSalvar();
+        });
+
+        $('#form_coluna select[name=ctg_id]').change(function (){
+            ctg_id = $(this).val()
+            ativaSalvar();
+        });
+
+        $('#btn_enviar_coluna').click(function (){$('#form_coluna').submit()})
+
+        $('#form_coluna').submit(function (){
+            $('input[name=col_id]').val(col_id);
+            var formData = new FormData(this);
+            $.ajax({
+                url:'/coluna/admin/save',
+                data:formData,
+                cache:false,
+                contentType: false,
+                processData: false,
+            }).done(function (result){
+                
+                coluna = result.coluna;
+                imagem = result.imagem;
+                
+                if( ! coluna.hasOwnProperty('col_id')){
+                    $().alert("Ocorreu algum problema ao postar a coluna, verifique.")
+                }
+
+                $('#modal_colunas').modal('hide');
+
+                var acao = '';
+                if(col_id){
+                    acao = 'alterada';
+                    
+                    $('#tb_exibe_colunas tr[data-col_id='+coluna.col_id+'] td:nth-child(2)').html(coluna.col_titulo);
+                    $('#tb_exibe_colunas tr[data-col_id='+coluna.col_id+']').attr('class', getCorFundoTr(coluna.ctg_id));
+
+                    //atualiza a coluna na tabela com os novos campos
+                    $(colunas).each(function (i, cada_coluna){
+                        if(cada_coluna.col_id === col_id){
+                            for(campo in cada_coluna){
+                                colunas[i][campo] = coluna[campo];
+                                $('#tb_exibe_colunas tbody tr[data-col_id'+col_id+']')
+                            }
+
+                        }
+                    })
+
+    //                console.log(coluna);
+    //                console.log(colunas);
+                } else {
+                    acao = 'inserida';
+
+                    $('#tb_exibe_colunas tbody').prepend('\
+                                                <tr data-col_id="'+coluna.col_id+'" class="'+getCorFundoTr(coluna.ctg_id)+'">\
+                                                    <td class="text-right">'+coluna.col_id+'</td>\
+                                                    <td>'+coluna.col_titulo+'</td>\
+                                                    <td class="text-center"><button type="button" class="btn btn-warning btn-editar"><i class="fa fa-edit"></i></button></td>\
+                                                    <td class="text-center"><button type="button" class="btn btn-danger btn-excluir"><i class="fa fa-times"></i></button></td>\
+                                                </tr>');
+
+                    $('#tb_exibe_colunas').find('tbody tr:first button.btn-editar').click(eventoEditarClick)
+                    $('#tb_exibe_colunas').find('tbody tr:first button.btn-excluir').click(eventoExcluirClick)
+                }
+
+                var message = 'Coluna '+ acao +' com sucesso!';
+                var type = 'success';
+
+                if(typeof imagem != 'undefined' && ! imagem.hasOwnProperty('caminho')){
+                    message = 'Coluna '+ acao +' com sucesso, mas ocorreu algum problema com a imagem.';
+                    type = 'warning';
+                }
+
+                $($('#colunista_alerta')).showMessageTarge({
+                    message: message,
+                    type: type
+                });
+
+                atualizaTamanhoContainerColunas()
+
+            });
+            return false;
+        });
     });
 </script>
