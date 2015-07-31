@@ -2,7 +2,10 @@
 $this->plugin('basePath')->setBasePath('/public/');
 $colunas = $this->colunas;
 $series = $this->series;
-$col_com_filhos_id = $this->col_com_filhos_id;
+$colunas_pais = $this->colunas_pais;
+//echo '<pre>';
+//print_r($colunas_pais);
+//die();
 $categorias = $this->categorias;
 $usuario = $this->usuario;
 ?>
@@ -178,12 +181,13 @@ $usuario = $this->usuario;
 <script>
     
     var colunas = <?= (sizeof($colunas)) ?  json_encode($colunas) : "[]" ?> 
-    var col_com_filhos_id = <?= (sizeof($col_com_filhos_id)) ?  json_encode($col_com_filhos_id) : "[]" ?> 
-    
+    var colunas_pais = <?= (sizeof($colunas_pais)) ?  json_encode($colunas_pais) : "[]" ?> 
+   
     var col_id = 0;
     var col_titulo = "";
     var col_texto = "";
     var ctg_id = "";
+    var col_pai_remover = 0;
     
     var eventoEditarClick = function (){
         col_id = $(this).parents('tr').attr('data-col_id');
@@ -232,7 +236,7 @@ $usuario = $this->usuario;
     function preencheModalColunas(col_dados){
         $('input:file').val('');
         $.each(col_dados, function (key, dados){
-            dados = (key === 'col_pai_id' && dados==null)?0:dados;
+            dados = (key === 'col_pai_id' && (dados==null || dados==false))?0:dados;
             $('#form_coluna [name='+key+']').val(dados);
         });
         
@@ -242,8 +246,9 @@ $usuario = $this->usuario;
         //oculta da lista de colunas para serie, a coluna selecionada
         $('#series option[value='+col_id+']').hide();
         $('#series :not(option[value='+col_id+'])').show();
+        col_pai_remover = $('#series').val();
         
-        if( col_com_filhos_id.indexOf(col_dados.col_id)>-1 ){
+        if( colunas_pais.indexOf(col_dados.col_id)>-1 ){
             $('#series').prop('disabled',true);
             $('#series option:first').html('Está coluna já é uma série.');
         } else {
@@ -336,11 +341,12 @@ $usuario = $this->usuario;
             ctg_id = $(this).val()
             ativaSalvar();
         });
-
+        
         $('#btn_enviar_coluna').click(function (){$('#form_coluna').submit()})
 
         $('#form_coluna').submit(function (){
             $('input[name=col_id]').val(col_id);
+            
             var formData = new FormData(this);
             $.ajax({
                 url:'/coluna/admin/save',
@@ -349,13 +355,11 @@ $usuario = $this->usuario;
                 contentType: false,
                 processData: false,
             }).done(function (result){
-                
-                console.log(result);
-                return false;
                
                 coluna = result.coluna;
                 serie = result.serie;
                 imagem = result.imagem;
+                
                 
                 if( ! coluna.hasOwnProperty('col_id')){
                     $().alert("Ocorreu algum problema ao postar a coluna, verifique.");
@@ -364,16 +368,29 @@ $usuario = $this->usuario;
                 $('#modal_colunas').modal('hide');
 
                 if(serie.hasOwnProperty('ser_id')){
-                    col_com_filhos_id.push(serie.col_id.toString());
-                    $(colunas).each(function (i, cada_coluna){
-                        if(cada_coluna.col_id===serie.col_filho_id){
-                            colunas[i]['ser_id'] = serie.serie_id;
-                            colunas[i]['col_pai_id'] = serie.col_id;
-                            colunas[i]['ser_ordem'] = serie.ser_ordem;
-                            return;
-                        }
-                    });
+                    // inseriu series
+                    colunas_pais.push(serie.col_id.toString());
+                } else {
+                    var index = colunas_pais.indexOf(col_pai_remover);
+                    if (index >= 0) { 
+                        colunas_pais.splice( index, 1 );
+                    }
+                    serie = {
+                        serie_id : null,
+                        col_id : false,
+                        col_filho_id: col_id,
+                        ser_ordem : false
+                    };
                 }
+                
+                $(colunas).each(function (i, cada_coluna){
+                    if(cada_coluna.col_id===serie.col_filho_id){
+                        colunas[i]['ser_id'] = serie.serie_id;
+                        colunas[i]['col_pai_id'] = serie.col_id;
+                        colunas[i]['ser_ordem'] = serie.ser_ordem;
+                        return;
+                    }
+                });
 
                 var acao = '';
                 if(col_id){

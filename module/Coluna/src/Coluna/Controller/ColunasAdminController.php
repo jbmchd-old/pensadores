@@ -20,15 +20,13 @@ class ColunasAdminController extends ControllerGenerico {
         $colunas_raw = $this->objetosParaArray($srv_vcolunas->getAllByUsrId($colunista_cod));
         
         $col_series = $this->objetosParaArray($srv_vcol_series->getAllByUsrId($colunista_cod));
-        $col_com_filhos_id = [];
+        $colunas_pais = [];
 
         foreach ($colunas_raw as $cada) {
             if((int) $cada['ser_id'] != 0){
-                $col_com_filhos_id[]=$cada['col_pai_id'];
+                $colunas_pais[]=$cada['col_pai_id'];
             }
         }
-        
-        $col_com_filhos_id = array_unique($col_com_filhos_id);        
         
         $srv_categoria = $this->p()->getEntity('Coluna', 'ColCategoria');
         $categorias_raw = $this->objetosParaArray($srv_categoria->getAll());
@@ -36,7 +34,7 @@ class ColunasAdminController extends ControllerGenerico {
         return new ViewModel([
             'colunas' => $colunas_raw,
             'series' => $col_series,
-            'col_com_filhos_id' => $col_com_filhos_id,
+            'colunas_pais' => $colunas_pais,
             'categorias' => $categorias_raw,
             'usuario' => $usuario,
         ]);
@@ -53,7 +51,6 @@ class ColunasAdminController extends ControllerGenerico {
 
         $dados = $request->getPost()->toArray();
         
-        
         if ((int) $dados['col_id'] > 0) {
             $dados['col_data_modificacao'] = date('Y-m-d H:i:s');
         } else {
@@ -63,7 +60,7 @@ class ColunasAdminController extends ControllerGenerico {
         $dados['usr_id'] = $this->sessao()->getArrayCopy()['storage']['usuario']['usr_id'];
         $dados['col_status'] = 'A';
         
-        $col_pai_id = $dados['col_pai_id'];
+        $col_pai_id = (int) $dados['col_pai_id'];
         unset($dados['col_pai_id']);
         
         $srv_colunas = $this->p()->getEntity('Coluna', 'ColColuna');
@@ -84,13 +81,10 @@ class ColunasAdminController extends ControllerGenerico {
                 }
             }
             
-            $result['serie'] = $this->criaSerie($col_pai_id, $col_id);
+            $result['serie'] = $this->gerenciaSerie($col_pai_id, $col_id);
             
             $this->backupBD();
         }
-
-//        $result['temp'] = $entity_coluna->toArray();
-
         return new JsonModel($result);
     }
 
@@ -112,6 +106,9 @@ class ColunasAdminController extends ControllerGenerico {
                 $file = $this->p()->getCaminhoUniversal(getcwd().DIRECTORY_SEPARATOR.$entity->getColEndImagem());
                 if($result && file_exists($file)){
                     unlink($file);
+                    $srv_series = $this->p()->getEntity('Coluna', 'ColSerie');
+                    $srv_series->removeByColId($col_id);
+                    $srv_series->removeByColFilhoId($col_id);
                 }
                 
             }
@@ -122,20 +119,25 @@ class ColunasAdminController extends ControllerGenerico {
         return new JsonModel([$result]);
     }
 
-    private function criaSerie($pai_id, $filho_id){
-        
-        if((int) $pai_id>0){
-            $srv_series = $this->p()->getEntity('Coluna', 'ColSerie');
+    private function gerenciaSerie($pai_id, $filho_id){
+        $srv_series = $this->p()->getEntity('Coluna', 'ColSerie');
+
+        if((int) $pai_id > 0){
+            $ordem_ultima = $srv_series->getByColIdOrderBySerOrdemDesc($pai_id);
+            $ordem_ultima = (get_class($ordem_ultima)==='Coluna\Entity\ColSerie')?(int) $ordem_ultima->getSerOrdem():0;
             $entity_ser = $srv_series->create([
                 'ser_id'=>false,
                 'col_id'=>$pai_id,
                 'col_filho_id'=>$filho_id,
-                'ser_ordem'=>(int) $srv_series->getByColIdOrderBySerOrdemDesc($pai_id)+1,
+                'ser_ordem'=>$ordem_ultima+1,
             ]);
-            $entity_ser = $srv_series->save($entity_ser);
-            return $entity_ser->toArray();
+            $result = $srv_series->save($entity_ser);
+            $result = $result->toArray();
+        } else {
+            $result = $srv_series->removeByColFilhoId($filho_id);
         }
         
+        return $result;
     }
 
     private function saveImage($array_files, $caminho, $nome_arq) {
