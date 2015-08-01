@@ -2,12 +2,21 @@
 <?php
 $this->plugin('basePath')->setBasePath('/public/');
 $coluna = $this->coluna;
-
 $coluna['col_texto'] = nl2br($coluna['col_texto']);
 $coluna['col_texto'] = str_replace('<br />', '</p><p>', $coluna['col_texto']);
 $coluna['col_texto'] = '<p>'.$coluna['col_texto'].'</p>';
 
 $categoria = $coluna['ctg_apelido'];
+
+$filhas = $coluna['filhas'];
+
+$titulo_alterado = $coluna['col_titulo'];
+
+if($coluna['col_titulo'] == $coluna['ser_nome']){
+    $titulo_alterado .= "<i> - Introdução </i>";
+} else {
+    $titulo_alterado .= "<i> - Parte {$this->p()->arabic2roman($coluna['ser_ordem'])} </i>";
+}
 
 $cor = '#D89D33';
 if($categoria == 'pensando-coracao'){
@@ -39,8 +48,7 @@ if($categoria == 'pensando-coracao'){
         background: #EEE;
         margin-top: 20px;
         margin-bottom: 20px;
-        padding: 20px;
-            
+        padding: 20px 0;    
     }
     
     #col_titulo{
@@ -53,6 +61,7 @@ if($categoria == 'pensando-coracao'){
     
     #col_texto{
         font-size: 1.3em;
+        padding: 20px
     }
     #col_texto:first-letter{
         font-size: 4em;
@@ -67,11 +76,32 @@ if($categoria == 'pensando-coracao'){
     .coluna-voltar{
         color: <?=$cor?>;
     }
+    
+    #serie_nome{
+        font-size: 1.5em;
+        margin-left: 20px
+    }
+        
+    
+    #barra_series{ 
+        margin-top: 18px;
+        text-align: center;
+    }
+    
+    .bloco_serie{
+        background: rgba(238, 238, 238, 0.49);
+        padding: 7px;
+        margin-bottom: 10px;
+        font-size: 1.3em;
+    }
 </style>
 <!--<img width="150" height="150" src="<?=$this->basePath()?>/img/id-visual/pensadores.png">-->
-<div id="coluna" class="col-xs-29 ">
+<div id="coluna" class="col-xs-30 col-md-18 col-md-push-4">
     <div class="col-xs-1 text-center coluna-voltar"><i class="fa fa-arrow-circle-left fa-2x"></i></a></div>
-    <div id="col_titulo" class="col-md-30 text-center"> <?= $coluna['col_titulo'] ?> </div>
+    <?php if(strlen($coluna['ser_nome'])):?>
+    <div id="serie_nome" class="col-md-30"><?="Série: <i>{$coluna['ser_nome']}</i>"?></div>
+    <?php endif;?>
+    <div id="col_titulo" class="col-md-30 text-center"> <?= $titulo_alterado ?> </div>
     <blockquote id="col_citacao" class="text-right">
         <footer>Por <cite><?= $coluna['usr_nome'].' '.$coluna['usr_sobrenome'] ?></cite></footer>
         <footer>Em <?= $coluna['col_data_postagem'] ?></footer>
@@ -83,7 +113,18 @@ if($categoria == 'pensando-coracao'){
     <?php endif;?>
     <div id="col_texto" class="text-justify "> <?= $coluna['col_texto']; ?> </div>
 </div>
-
+<?php if(sizeof($filhas)):?>
+<div id="barra_series" class="col-md-7 col-md-push-4">
+    <span  style="color: #EEE; font-size: 1.5em;">Acompanhe esta série</span>
+    
+    <?php foreach ($filhas as $filha) :?>
+    <div class="col-xs-30 bloco_serie text-left">
+        <?php $aux = ($filha['col_titulo'] == $coluna['col_titulo'])?' (lendo agora)':'';?>
+        <?= $filha['col_titulo'].$aux ?>
+    </div>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>
 <script>
 
     $(".layout-logo-principal").removeClass('col-xs-20 col-xs-push-4').addClass('col-xs-10');
