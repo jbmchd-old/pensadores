@@ -94,6 +94,24 @@ if($categoria == 'pensando-coracao'){
         margin-bottom: 10px;
         font-size: 1.3em;
     }
+    
+    .series_link{
+        
+    }
+    
+    a.series_link:link, a.series_link:visited {
+	text-decoration: none;
+        color: #333
+        
+    }
+    a.series_link:hover {
+        text-decoration: underline; 
+        color: #000
+    }
+    a.series_link:active {
+        text-decoration: none
+    }
+    
 </style>
 <!--<img width="150" height="150" src="<?=$this->basePath()?>/img/id-visual/pensadores.png">-->
 <div id="coluna" class="col-xs-30 col-md-18 col-md-push-4">
@@ -119,8 +137,14 @@ if($categoria == 'pensando-coracao'){
     
     <?php foreach ($filhas as $filha) :?>
     <div class="col-xs-30 bloco_serie text-left">
-        <?php $aux = ($filha['col_titulo'] == $coluna['col_titulo'])?' (lendo agora)':'';?>
-        <?= $filha['col_titulo'].$aux ?>
+        <?php
+            if($filha['col_titulo'] == $coluna['col_titulo']){
+                echo  '<span>'.$filha["col_titulo"].' (lendo agora)</span>';
+            } else {
+                echo  '<a class="series_link" href="'."/coluna/{$filha['ctg_apelido']}/{$filha['col_id']}".'">'.$filha["col_titulo"].'</a>';
+            }
+        ?>
+        
     </div>
     <?php endforeach; ?>
 </div>
@@ -138,4 +162,12 @@ if($categoria == 'pensando-coracao'){
         .append('<div style="color: #FDFDFE; font-size:1.2em"><?=$coluna['ctg_nome']?><div>');
 
     $('.coluna-voltar').click(function (){ window.location='/';})
+    
+    $('.bloco_serie').hover(function (){
+        $(this).css({ background: 'rgba(238, 238, 238, 1)', color: '#000'});
+    }, function(){
+        $(this).css({ background: 'rgba(238, 238, 238, 0.49)', color: '#000'});
+    });
+    
+    
 </script>

@@ -27,13 +27,11 @@ class ColunasController extends ControllerGenerico {
 
                 $coluna['filhas'][$key]['col_id'] = $filha['col_id'];
                 $coluna['filhas'][$key]['col_titulo'] = $filha['col_titulo'];
+                $coluna['filhas'][$key]['ctg_apelido'] = $filha['ctg_apelido'];
                 $coluna['filhas'][$key]['col_data_postagem'] = $filha['col_data_postagem'];
                 $coluna['filhas'][$key]['ser_ordem'] = $filha['ser_ordem'];
             }
         }
-
-
-
 
         return $coluna;
     }
