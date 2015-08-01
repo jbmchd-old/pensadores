@@ -23,7 +23,7 @@
      * @returns {undefined}
      */
 
-    $.fn.confirm = function (options, yes) {
+    $.fn.confirmar = function (options, yes) {
         
         seletor = (this.selector)?this[0]:false;
 
@@ -111,7 +111,7 @@
         
     };
     
-    $.fn.alert = function (text) {
+    $.fn.alertar = function (text) {
         
         if(typeof text === 'undefined' || text.trim() === ''){
             text = '';
