@@ -4,7 +4,7 @@ namespace Coluna\Entity\View;
 
 use Nucleo\Service\GenericEntity;
 
-class VColSerie extends GenericEntity {
+class VColLiberadasParaSerie extends GenericEntity {
 	
     private $colId;
     private $colTitulo;

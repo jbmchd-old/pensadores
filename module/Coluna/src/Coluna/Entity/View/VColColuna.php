@@ -18,12 +18,13 @@ class VColColuna extends GenericEntity {
     private $colObservacao;
     private $colEndImagem;
     private $colStatus;
+    private $serId;
+    private $serNome;
+    private $colPaiId;
+    private $serOrdem;
     private $chvNome;
     private $ctgNome;
     private $ctgApelido;
-    private $serId;
-    private $col_pai_id;
-    private $ser_ordem;
     private $usrLogin;
     private $usrSenha;
     private $usrEmail;

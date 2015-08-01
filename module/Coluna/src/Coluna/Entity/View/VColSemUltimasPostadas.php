@@ -18,6 +18,10 @@ class VColSemUltimasPostadas extends GenericEntity {
     private $colObservacao;
     private $colEndImagem;
     private $colStatus;
+    private $serId;
+    private $serNome;
+    private $colPaiId;
+    private $serOrdem;
     private $chvNome;
     private $ctgNome;
     private $ctgApelido;

@@ -10,7 +10,7 @@ class ColunasAdminController extends ControllerGenerico {
 
     public function indexAction() {
         $srv_vcolunas = $this->p()->getEntity('Coluna', 'VColColuna');
-        $srv_vcol_series = $this->p()->getEntity('Coluna', 'VColSerie');
+        $srv_vcol_series = $this->p()->getEntity('Coluna', 'VColLiberadasParaSerie');
         
         
         $sessao = $this->sessao()->getArrayCopy();
@@ -20,6 +20,7 @@ class ColunasAdminController extends ControllerGenerico {
         $colunas_raw = $this->objetosParaArray($srv_vcolunas->getAllByUsrId($colunista_cod));
         
         $col_series = $this->objetosParaArray($srv_vcol_series->getAllByUsrId($colunista_cod));
+        
         $colunas_pais = [];
 
         foreach ($colunas_raw as $cada) {
