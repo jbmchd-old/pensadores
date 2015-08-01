@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: jb
@@ -12,18 +13,18 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Nucleo\Service\ServiceManager;
 
 class Generic extends AbstractPlugin {
-    
-    public function getEntity($module, $entity_name){
+
+    public function getEntity($module, $entity_name) {
         $service = $this->getController()->getServiceLocator()->get('Nucleo\ServiceManager')->getService($module, $entity_name, ServiceManager::TYPE_ENTITY);
         return $service;
     }
-    
-    public function getService($module, $service_name){
+
+    public function getService($module, $service_name) {
         $service = $this->getController()->getServiceLocator()->get('Nucleo\ServiceManager')->getService($module, $service_name, ServiceManager::TYPE_SERVICE);
         return $service;
     }
-    
-    public function getCaminhoUniversal($caminho_raw){
+
+    public function getCaminhoUniversal($caminho_raw) {
         return str_replace('\\', DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR, $caminho_raw));
     }
 
@@ -34,9 +35,9 @@ class Generic extends AbstractPlugin {
         ];
         return array_merge($resposta, $this->getResponseReasonType($cod));
     }
-    
+
     public function getResponseReasonMessage($cod) {
-        
+
         $reason = [
             1 => 'info',
 //            2 => 'ok',
@@ -100,26 +101,61 @@ class Generic extends AbstractPlugin {
 //            508 => "Loop Detected",
             511 => "Falha na autenticação",
         ];
-        
-        if(isset($reason[$cod])) {
+
+        if (isset($reason[$cod])) {
             return $reason[$cod];
         } else {
             throw new \Exception('Response Code Incorrect in PluginGenerico (getResponseReasonMessage()).');
         }
-        
     }
-    
-    public function getResponseReasonType($cod){
-        if($cod >= 400 || $cod = 4){
-            $array = [ 'type'=>'error', 'css-type'=>'danger' ];
-        } else if($cod >= 300 || $cod = 3){
-            $array = [ 'type'=>'redirect', 'css-type'=>'warning' ];
-        } else if($cod >= 200 || $cod = 2){
-            $array = [ 'type'=>'ok', 'css-type'=>'success' ];
+
+    public function getResponseReasonType($cod) {
+        if ($cod >= 400 || $cod = 4) {
+            $array = [ 'type' => 'error', 'css-type' => 'danger'];
+        } else if ($cod >= 300 || $cod = 3) {
+            $array = [ 'type' => 'redirect', 'css-type' => 'warning'];
+        } else if ($cod >= 200 || $cod = 2) {
+            $array = [ 'type' => 'ok', 'css-type' => 'success'];
         } else {
-            $array = [ 'type'=>'info', 'css-type'=>'info' ];
-        } 
-        
+            $array = [ 'type' => 'info', 'css-type' => 'info'];
+        }
+
         return $array;
     }
-} 
+
+    function arabic2roman($integer) {
+        // Convert the integer into an integer (just to make sure)
+        $integer = intval($integer);
+        $result = '';
+
+        // Create a lookup array that contains all of the Roman numerals.
+        $lookup = array('M' => 1000,
+            'CM' => 900,
+            'D' => 500,
+            'CD' => 400,
+            'C' => 100,
+            'XC' => 90,
+            'L' => 50,
+            'XL' => 40,
+            'X' => 10,
+            'IX' => 9,
+            'V' => 5,
+            'IV' => 4,
+            'I' => 1);
+
+        foreach ($lookup as $roman => $value) {
+            // Determine the number of matches
+            $matches = intval($integer / $value);
+
+            // Add the same number of characters to the string
+            $result .= str_repeat($roman, $matches);
+
+            // Set the integer to be the remainder of the integer and the value
+            $integer = $integer % $value;
+        }
+
+        // The Roman numeral should be built, return it
+        return $result;
+    }
+
+}
