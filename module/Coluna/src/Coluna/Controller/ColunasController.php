@@ -21,10 +21,6 @@ class ColunasController extends ControllerGenerico {
             $filhas = (strlen($coluna['ser_nome']))? $this->objetosParaArray($srv_vcolunas->getAllBySerNomeOrderBySerOrdem($coluna['ser_nome'])):[];
             foreach ($filhas as $key => $filha) {
 
-                if ($coluna['col_titulo'] == $coluna['ser_nome']) {
-//                    $coluna['col_titulo'] = $filha['col_titulo'] .= ' - Introdução';
-                } 
-
                 $coluna['filhas'][$key]['col_id'] = $filha['col_id'];
                 $coluna['filhas'][$key]['col_titulo'] = $filha['col_titulo'];
                 $coluna['filhas'][$key]['ctg_apelido'] = $filha['ctg_apelido'];

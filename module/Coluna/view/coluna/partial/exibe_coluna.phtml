@@ -14,7 +14,7 @@ $titulo_alterado = $coluna['col_titulo'];
 
 if($coluna['col_titulo'] == $coluna['ser_nome']){
     $titulo_alterado .= "<i> - Introdução </i>";
-} else {
+} else if(strlen($coluna['ser_nome'])) {
     $titulo_alterado .= "<i> - Parte {$this->p()->arabic2roman($coluna['ser_ordem'])} </i>";
 }
 
@@ -61,7 +61,8 @@ if($categoria == 'pensando-coracao'){
     
     #col_texto{
         font-size: 1.3em;
-        padding: 20px
+        padding: 20px;
+        margin-top: 70px;
     }
     #col_texto:first-letter{
         font-size: 4em;
