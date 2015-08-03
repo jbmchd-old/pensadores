@@ -2,9 +2,9 @@
 <?php
 $this->plugin('basePath')->setBasePath('/public/');
 $coluna = $this->coluna;
-$coluna['col_texto'] = nl2br($coluna['col_texto']);
-$coluna['col_texto'] = str_replace('<br />', '</p><p>', $coluna['col_texto']);
-$coluna['col_texto'] = '<p>'.$coluna['col_texto'].'</p>';
+//$coluna['col_texto'] = nl2br($coluna['col_texto']);
+//$coluna['col_texto'] = str_replace('<br />', '</p><p>', $coluna['col_texto']);
+//$coluna['col_texto'] = '<p>'.$coluna['col_texto'].'</p>';
 
 $categoria = $coluna['ctg_apelido'];
 
@@ -31,10 +31,6 @@ if($categoria == 'pensando-coracao'){
     .layout-logo-principal {
         /*text-align: right;*/
     }
-    
-/*    .navbar .icone-categoria img:not([data-ctg='<?=$coluna['ctg_apelido']?>']) {
-        display: none
-    }*/
     
     .layout-icone-logar{
         margin: 2%
@@ -79,7 +75,7 @@ if($categoria == 'pensando-coracao'){
     }
     
     #serie_nome{
-        font-size: 1.5em;
+        font-size: 1.2em;
         margin-left: 20px
     }
         
@@ -114,7 +110,7 @@ if($categoria == 'pensando-coracao'){
     }
     
 </style>
-<!--<img width="150" height="150" src="<?=$this->basePath()?>/img/id-visual/pensadores.png">-->
+
 <div id="coluna" class="col-xs-30 col-md-18 col-md-push-4">
     <div class="col-xs-1 text-center coluna-voltar"><i class="fa fa-arrow-circle-left fa-2x"></i></a></div>
     <?php if(strlen($coluna['ser_nome'])):?>
@@ -132,8 +128,9 @@ if($categoria == 'pensando-coracao'){
     <?php endif;?>
     <div id="col_texto" class="text-justify "> <?= $coluna['col_texto']; ?> </div>
 </div>
+
 <?php if(sizeof($filhas)):?>
-<div id="barra_series" class="col-md-7 col-md-push-4">
+<span id="barra_series" class="col-md-7 col-md-push-4">
     <span  style="color: #EEE; font-size: 1.5em;">Acompanhe esta série</span>
     
     <?php foreach ($filhas as $filha) :?>
@@ -148,7 +145,7 @@ if($categoria == 'pensando-coracao'){
         
     </div>
     <?php endforeach; ?>
-</div>
+</span>
 <?php endif; ?>
 <script>
 
