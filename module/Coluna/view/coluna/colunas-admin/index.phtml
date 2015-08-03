@@ -238,6 +238,7 @@ $usuario = $this->usuario;
     function preencheModalColunas(col_dados){
         $('input:file').val('');
         $.each(col_dados, function (key, dados){
+            
             dados = (key === 'col_pai_id' && (dados==null || dados==false))?0:dados;
             $('#form_coluna [name='+key+']').val(dados);
             col_texto = $('#col_texto').val();
@@ -417,11 +418,10 @@ $usuario = $this->usuario;
                 contentType: false,
                 processData: false,
             }).done(function (result){
-
+                
                 coluna = result.coluna;
                 serie = result.serie;
                 imagem = result.imagem;
-                
                 
                 if( ! coluna.hasOwnProperty('col_id')){
                     $().alerta("Ocorreu algum problema ao postar a coluna, verifique.");
@@ -429,12 +429,15 @@ $usuario = $this->usuario;
 
                 $('#modal_colunas').modal('hide');
 
+                
                 if(serie.hasOwnProperty('ser_id')){
-                    // inseriu series
-                    colunas_pais.push(serie.col_id.toString());
+                    if( ! serie.hasOwnProperty('ignorar_serie')){
+                        // inseriu series
+                        colunas_pais.push(serie.col_id.toString());
+                    }
                 } else {
                     var index = colunas_pais.indexOf(col_pai_remover);
-                    if (index >= 0) { 
+                    if (index >= 0) {
                         colunas_pais.splice( index, 1 );
                     }
                     serie = {
@@ -445,13 +448,15 @@ $usuario = $this->usuario;
                     };
                 }
                 
-                $(colunas).each(function (i, cada_coluna){
-                    if(cada_coluna.col_id===serie.col_filho_id){
-                        colunas[i]['ser_id'] = serie.serie_id;
-                        colunas[i]['col_pai_id'] = serie.col_id;
-                        colunas[i]['ser_ordem'] = serie.ser_ordem;
+                
+                //atualiza a coluna na tabela com os novos campos
+                $(colunas).each(function (i, cada_coluna){    
+                    if(cada_coluna.col_id === col_id){
+                        for(campo in coluna){ colunas[i][campo] = coluna[campo]; }
+                        for(campo in serie) { colunas[i][campo] = serie[campo]; }
                         return;
                     }
+                    
                 });
 
                 var acao = '';
@@ -461,16 +466,6 @@ $usuario = $this->usuario;
                     $('#tb_exibe_colunas tr[data-col_id='+coluna.col_id+'] td:nth-child(2)').html(coluna.col_titulo);
                     $('#tb_exibe_colunas tr[data-col_id='+coluna.col_id+']').attr('class', getCorFundoTr(coluna.ctg_id));
 
-                    //atualiza a coluna na tabela com os novos campos
-                    $(colunas).each(function (i, cada_coluna){
-                        if(cada_coluna.col_id === col_id){
-                            for(campo in cada_coluna){
-                                colunas[i][campo] = coluna[campo];
-                            }
-                            return;
-
-                        }
-                    })
                 } else {
                     acao = 'inserida';
                     

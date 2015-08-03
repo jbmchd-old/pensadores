@@ -12,7 +12,6 @@ class ColunasAdminController extends ControllerGenerico {
         $srv_vcolunas = $this->p()->getEntity('Coluna', 'VColColuna');
         $srv_vcol_series = $this->p()->getEntity('Coluna', 'VColLiberadasParaSerie');
         
-        
         $sessao = $this->sessao()->getArrayCopy();
         $usuario = $sessao['storage']['usuario'];
 
@@ -31,7 +30,7 @@ class ColunasAdminController extends ControllerGenerico {
         
         $srv_categoria = $this->p()->getEntity('Coluna', 'ColCategoria');
         $categorias_raw = $this->objetosParaArray($srv_categoria->getAll());
-
+        
         return new ViewModel([
             'colunas' => $colunas_raw,
             'series' => $col_series,
@@ -102,7 +101,11 @@ class ColunasAdminController extends ControllerGenerico {
         $file = '';
         if(get_class($entity) == 'Coluna\Entity\ColColuna'){
             
+            $srv_series = $this->p()->getEntity('Coluna', 'ColSerie');
+            $srv_series->removeByColFilhoId($col_id);
+            
             $result = $srv_colunas->removeByColId($col_id);
+            
             if( ! empty($entity->getColEndImagem())){
                 $file = $this->p()->getCaminhoUniversal(getcwd().DIRECTORY_SEPARATOR.$entity->getColEndImagem());
                 if($result && file_exists($file)){
@@ -124,16 +127,26 @@ class ColunasAdminController extends ControllerGenerico {
         $srv_series = $this->p()->getEntity('Coluna', 'ColSerie');
 
         if((int) $pai_id > 0){
-            $ordem_ultima = $srv_series->getByColIdOrderBySerOrdemDesc($pai_id);
-            $ordem_ultima = (get_class($ordem_ultima)==='Coluna\Entity\ColSerie')?(int) $ordem_ultima->getSerOrdem():0;
-            $entity_ser = $srv_series->create([
-                'ser_id'=>false,
-                'col_id'=>$pai_id,
-                'col_filho_id'=>$filho_id,
-                'ser_ordem'=>$ordem_ultima+1,
-            ]);
-            $result = $srv_series->save($entity_ser);
-            $result = $result->toArray();
+            
+            $result = $srv_series->getByColumns(['col_id'=>$pai_id,'col_filho_id'=>$filho_id]);
+            
+            if( is_object($result)){
+                $result = $result->toArray();
+                $result['ignorar_serie'] = TRUE;
+            } else{
+                $srv_series->removeByColFilhoId($filho_id);
+                $ordem_ultima = $srv_series->getByColIdOrderBySerOrdemDesc($pai_id);
+                $ordem_ultima = (get_class($ordem_ultima)==='Coluna\Entity\ColSerie')?(int) $ordem_ultima->getSerOrdem():0;
+                $entity_ser = $srv_series->create([
+                    'ser_id'=>false,
+                    'col_id'=>$pai_id,
+                    'col_filho_id'=>$filho_id,
+                    'ser_ordem'=>$ordem_ultima+1,
+                ]);
+                $result = $srv_series->save($entity_ser);
+                $result = $result->toArray();
+            }
+            
         } else {
             $result = $srv_series->removeByColFilhoId($filho_id);
         }
