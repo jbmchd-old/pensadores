@@ -2,9 +2,6 @@
 <?php
 $this->plugin('basePath')->setBasePath('/public/');
 $coluna = $this->coluna;
-//$coluna['col_texto'] = nl2br($coluna['col_texto']);
-//$coluna['col_texto'] = str_replace('<br />', '</p><p>', $coluna['col_texto']);
-//$coluna['col_texto'] = '<p>'.$coluna['col_texto'].'</p>';
 
 $categoria = $coluna['ctg_apelido'];
 
@@ -119,6 +116,7 @@ if($categoria == 'pensando-coracao'){
     <div id="col_titulo" class="col-md-30 text-center"> <?= $titulo_alterado ?> </div>
     <blockquote id="col_citacao" class="text-right">
         <footer>Por <cite><?= $coluna['usr_nome'].' '.$coluna['usr_sobrenome'] ?></cite></footer>
+        <footer><cite><a href="https://<?= $coluna['usr_pagina_web'] ?>"><?= $coluna['usr_pagina_web'] ?></a></cite></footer>
         <footer>Em <?= $coluna['col_data_postagem'] ?></footer>
     </blockquote>
     <?php if( !empty($coluna['col_end_imagem'])):?>
