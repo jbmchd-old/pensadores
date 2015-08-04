@@ -8,5 +8,5 @@ nbproject
 .settings
 composer.lock
 local.php
-vendor/
+#vendor/
 data/
