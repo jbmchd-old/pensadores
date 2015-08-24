@@ -1,8 +1,9 @@
 <?php
 $this->plugin('basePath')->setBasePath('/public/');
 
-echo $this->headScript()->prependFile($this->basePath() . '/vendor/line-control-bootstrap-editor/editor.js');
-echo $this->headLink()->prependStylesheet($this->basePath() . '/vendor/line-control-bootstrap-editor/editor.css');
+echo $this->headScript()->prependFile($this->basePath() . '/vendor/jquery-html-box-editor/htmlbox.full.js');
+echo $this->headScript()->prependFile($this->basePath() . '/vendor/jquery-html-box-editor/bowser.js');
+
 
 $colunas = $this->colunas;
 $series = $this->series;
@@ -132,7 +133,8 @@ $usuario = $this->usuario;
                                     </div>
                                     
                                     <div class="form-group col-md-30">
-                                        <label>Texto*</label>
+                                        <label>Texto* 
+                                            <!--<sup>(antes de escrever a coluna, clique no primeiro ícone (parágrafo) para melhorar a formatação da coluna)</sup></label>-->
                                         <textarea id="col_texto" name="col_texto" class="form-control" rows="25" placeholder="Texto" style="width: 858px; height: 550px" data-obrigatorio></textarea>
                                     </div>
                                     <div class="form-group col-md-15">
@@ -188,8 +190,11 @@ $usuario = $this->usuario;
     var col_id = 0;
     var col_titulo = "";
     var col_texto = "";
+    var col_texto_puro = "";
     var ctg_id = "";
     var col_pai_remover = 0;
+    var Editor;
+    
     
     var eventoEditarClick = function (){
         col_id = $(this).parents('tr').attr('data-col_id');
@@ -244,7 +249,8 @@ $usuario = $this->usuario;
             col_texto = $('#col_texto').val();
         });
         
-        $('.Editor-editor').html($('#col_texto').val().replace(/(?:\r\n|\r|\n)/g, '<br />'));
+        Editor.set_text($('#col_texto').val().replace(/(?:\r\n|\r|\n)/g, '<br />'));
+//        Editor.set_text('dasdfasdf');
         
         col_id = col_dados.col_id;
         $('#modal_colunas .modal-title').html(col_dados.col_titulo);
@@ -277,7 +283,7 @@ $usuario = $this->usuario;
     function limpaFormColuna(){
         $('#modal_colunas .modal-title').html('Nova coluna...');
         $('#form_coluna').find('textarea, input:text, input:hidden, input:file').val('');
-        $('.Editor-editor').html('');
+        Editor.set_text('')
         $('#form_coluna').find('select').val(0);
         $('#series').prop('disabled',false);
         $('#series option:first').html('Selecione a coluna pai');
@@ -306,7 +312,8 @@ $usuario = $this->usuario;
     }
     
     function ativaSalvar(){
-        if(col_titulo && col_texto && ctg_id>0){
+        
+        if(col_titulo && ctg_id>0){
             $('#btn_enviar_coluna').prop('disabled',false) 
         } else {
             $('#btn_enviar_coluna').prop('disabled',true) ;
@@ -314,70 +321,43 @@ $usuario = $this->usuario;
     }
     
     function atualizaTamanhoContainerColunas(){
-//            var qtd_colunas = $('#tb_exibe_colunas tbody tr').length;
-//            var novo_tamanho = 96+120+ (qtd_colunas * 45);
-            var novo_tamanho = 500;
+            var qtd_colunas = $('#tb_exibe_colunas tbody tr').length;
+            var novo_tamanho = 60+0+ (qtd_colunas * 45);
+//            var novo_tamanho = 500;
             $('#container_colunas').css('height',novo_tamanho)
         }
     
-    function preparaFormularioParaEditor(){
-        $("#col_texto").Editor({
-            'bold': true,
-            'italics': true,
-            'underline':true,
-            'insert_link':true,
-            'unlink':true,
-            'ol':true,
-            'ul':true,
-            'undo':true,
-            'redo':true,
-            'togglescreen':true,
-            'source':false,
-            'advancedoptions' : false,
-//            
-            'status_bar':false,
-            'texteffects':false,
-            'aligneffects':false,
-            'textformats':false,
-            'fonteffects':false,
-            'actions' : false,
-            'insertoptions' : false,
-            'extraeffects' : false,
-            'screeneffects':false,
-            'l_align':false,
-            'r_align':false,
-            'c_align':false,
-            'justify':false,
-            'insert_img':false,
-            'hr_line':false,
-            'block_quote':false,
-            'strikeout':false,
-            'indent':false,
-            'outdent':false,
-            'print':false,
-            'rm_format':false,
-            'insert_table':false,
-            'select_all':false,
-//            'fonts':fonts,
-//            'styles':styles,
-//            'font_size':fontsizes,
-//            'color':colors,
-//            'splchars':specialchars,
-        });                   
+    function iniciaEditor(){
+        Editor = $("#col_texto")
+                                .addClass('col-lg-30')
+                                .htmlbox({
+                                    toolbars:[
+                                            ["separator","bold","italic","underline","separator","quote","outdent", "separator","left","center","right","justify","separator","ol","ul","separator","link","unlink","separator","hr","separator","undo","redo"]
+                                        ],
+                                        css:"body{font-family:verdana;font-size:11px;}",
+                                        icons:"silk",
+                                        skin:"blue",
+                                        keyup: function (){
+                                            console.log(':)');
+                                        }
+                                })
         
-        $("#menuBarDiv").find("div[title=Fonts], div[title='Paragraph Format'], div[title='Font Size'], a[title='Text/Background Color'], a[title='Insert Special Character']").hide();
-        $("#menuBarDiv").find('.btn').click(function (){
-            col_texto = $('.Editor-editor').html();
+        
+        $("table#col_texto_wrap table tbody td[class$=button]:not(:last)").click(function (){
+            col_texto = Editor.get_html();
+            col_texto_puro = Editor.get_text().startContainer.innerText;
             $('#col_texto').val(col_texto); 
             ativaSalvar();
         });
         
-        $('.Editor-editor').keyup(function (){ 
-            col_texto = $('.Editor-editor').html();
+        var editor = $('iframe').contents().find('body');
+        $(editor).keyup(function (){ 
+            col_texto = Editor.get_html();
+            col_texto_puro = Editor.get_text().startContainer.innerText;
             $('#col_texto').val(col_texto); 
-            ativaSalvar();
+//            ativaSalvar();         
         });
-        
+
     }
     
     $(function (){
@@ -502,8 +482,7 @@ $usuario = $this->usuario;
             return false;
         });
         
-        preparaFormularioParaEditor();
-
-//        $('#btn_nova_coluna').click()
+        iniciaEditor();
+        
     });
 </script>
