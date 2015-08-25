@@ -6,10 +6,6 @@ use Nucleo\Service\GenericEntity;
 
 class VColColuna extends GenericEntity {
 	
-    public function setColDataPostagem($colDataPostagem){
-        $this->colDataPostagem = (new \DateTime($colDataPostagem))->format("d/m/y");
-    }
-
     public function __call($name, $arguments) {
         $attr = lcfirst(substr($name, 3));
         if(strpos($name, 'set') === 0){

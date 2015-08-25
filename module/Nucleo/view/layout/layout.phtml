@@ -1,6 +1,9 @@
 <?php 
 $this->plugin('basePath')->setBasePath('/public/');
 
+$this->headMeta()->setProperty("og:locale", "pt_BR")
+                ->setProperty("og:site_name", "Os Pensadores");
+
 echo $this->doctype(); 
 
 ?>

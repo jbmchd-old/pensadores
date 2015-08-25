@@ -1,19 +1,36 @@
 
 <?php
 $this->plugin('basePath')->setBasePath('/public/');
+
+
 $coluna = $this->coluna;
-
 $categoria = $coluna['ctg_apelido'];
-
 $filhas = $coluna['filhas'];
-
 $titulo_alterado = $coluna['col_titulo'];
-
 if($coluna['col_titulo'] == $coluna['ser_nome']){
     $titulo_alterado .= "<i> - Introdução </i>";
 } else if(strlen($coluna['ser_nome'])) {
     $titulo_alterado .= "<i> - Parte {$this->p()->arabic2roman($coluna['ser_ordem'])} </i>";
 }
+
+$imagem_face = 'http://ospensadores.com/public/img/id-visual/pensadores.png';
+
+$this->headMeta()
+                ->setProperty("og:url", "http://ospensadores.com/coluna/{$coluna['ctg_apelido']}/{$coluna['col_id']}")
+                ->setProperty("og:title", "$titulo_alterado")
+                ->setProperty("og:description", "{$coluna['col_resumo']}")
+                ->setProperty("og:image", $imagem_face )
+//                ->setProperty("og:image:width", getimagesize($imagem_face)[0])
+//                ->setProperty("og:image:height", getimagesize($imagem_face)[1])
+                ->setProperty("og:image:width", "320")
+                ->setProperty("og:image:height", "320")
+                ->setProperty("og:image:type", "png")
+                ->setProperty("og:type", "article")
+
+                ->setProperty("og:author", $coluna['usr_nome'].' '.$coluna['usr_sobrenome'])
+                ->setProperty("og:published_time", "{$coluna['col_data_postagem']}");
+
+                    
 
 $cor = '#D89D33';
 if($categoria == 'pensando-coracao'){

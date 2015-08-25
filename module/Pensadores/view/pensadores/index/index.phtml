@@ -1,3 +1,20 @@
+<?php
+    $this->plugin('basePath')->setBasePath('/public/');
+
+    $this->headMeta()
+                    ->setProperty("og:url", "http://ospensadores.com")
+                    ->setProperty("og:title", "Pra quem acredita na vida, no amor e em Deus")
+                    ->setProperty("og:description", "Pense, só isso, pense, não queremos mais nada além disso: que você pense e pense bem, com sua própria cabeça, queremos que você tenha opinião própria, uma vida com objetivos, cheia de amor e cheia de Deus.")
+                    ->setProperty("og:image", 'http://www.ospensadores.com/public/img/divulgacao/post-inst-redes.png')
+                    ->setProperty("og:image:type", "png")
+                    ->setProperty("og:image:width", "400")
+                    ->setProperty("og:image:height", "400")
+                    ->setProperty("og:type", "website");
+
+    $ultimas_colunas = $this->ultimas_colunas; 
+    $colunas = $this->colunas;
+?>
+
 <style>
     .bloco {
         margin-top: 15px;
@@ -26,11 +43,6 @@
     
 </style>
 
-    <?php
-    $ultimas_colunas = $this->ultimas_colunas; 
-    $colunas = $this->colunas;
-    ?>
-    
 <!--<div id="slider" class="bloco bloco-destaque col-md-9">
     
     <div style="background: linear-gradient(to right, #D89D33, #C270AD, #2D84C6); height: 4px"></div>
