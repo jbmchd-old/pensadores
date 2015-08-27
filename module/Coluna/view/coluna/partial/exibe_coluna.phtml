@@ -13,17 +13,18 @@ if($coluna['col_titulo'] == $coluna['ser_nome']){
     $titulo_alterado .= "<i> - Parte {$this->p()->arabic2roman($coluna['ser_ordem'])} </i>";
 }
 
-$imagem_face = 'http://ospensadores.com/public/img/id-visual/pensadores.png';
+$imagem_face = $coluna['col_end_imagem'];
+if (is_null($imagem_face) || empty(trim($imagem_face))) {
+    $imagem_face = 'http://ospensadores.com/public/img/id-visual/pensadores.png';
+}
 
 $this->headMeta()
                 ->setProperty("og:url", "http://ospensadores.com/coluna/{$coluna['ctg_apelido']}/{$coluna['col_id']}")
                 ->setProperty("og:title", "$titulo_alterado")
                 ->setProperty("og:description", "{$coluna['col_resumo']}")
                 ->setProperty("og:image", $imagem_face )
-//                ->setProperty("og:image:width", getimagesize($imagem_face)[0])
-//                ->setProperty("og:image:height", getimagesize($imagem_face)[1])
-                ->setProperty("og:image:width", "320")
-                ->setProperty("og:image:height", "320")
+                ->setProperty("og:image:width", getimagesize($imagem_face)[0])
+                ->setProperty("og:image:height", getimagesize($imagem_face)[1])
                 ->setProperty("og:image:type", "png")
                 ->setProperty("og:type", "article")
 
