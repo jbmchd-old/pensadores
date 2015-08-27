@@ -102,13 +102,9 @@ $usuario = $this->usuario;
                                 </form>
 
                                 <form id="form_coluna" action="#" method="POST" enctype="multipart/form-data">
-                                    <div class="form-group col-md-15">
+                                    <div class="form-group col-md-20">
                                         <label>Título*</label>
                                         <input type="text" name="col_titulo" class="form-control" placeholder="Título" data-obrigatorio />
-                                    </div>
-                                    <div class="form-group col-md-10 hide">
-                                        <label>Imagem</label>
-                                        <input type="file" name="col_imagem" class="form-control" placeholder="Imagem"  />
                                     </div>
                                     
                                     <div class="clear form-group col-md-10">
@@ -130,6 +126,21 @@ $usuario = $this->usuario;
                                                 <option value="<?= $serie['col_id'] ?>"><?= $serie['col_titulo'] ?></option>
                                             <?php endforeach; ?>
                                         </select>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-24" id="dv_carregar_imagem">
+                                        <div class="col-md-30">
+                                            <label>Imagem <sup>(Cuidado: Quanto maior a imagem, maior o tempo para verificar)</sup></label></label>
+                                        </div>
+                                        <!--<input type="file" name="col_imagem" class="form-control" placeholder="Imagem"  />-->
+                                            
+                                        <div class="col-md-26">
+                                            <input type="text" id="col_end_imagem" name="col_end_imagem" class="form-control" placeholder="Endereço da imagem" />
+                                        </div>
+                                        <div class="col-md-1 hide" style="margin-top: 4px" id="dv_imagem_carregando">
+                                            <i class="fa fa-spinner fa-pulse"></i>
+                                        </div>
+                                        <div id="dv_msg_carregamento_imagem" class="col-md-3" style="margin-top: 4px"></div>
                                     </div>
                                     
                                     <div class="form-group col-md-30">
@@ -270,7 +281,6 @@ $usuario = $this->usuario;
     }
     
     function buscaColuna(col_id){
-        var col_dados = {};
         $.each(colunas, function (key, coluna){
             if(coluna.col_id == col_id){
                 col_dados = coluna;
@@ -386,7 +396,20 @@ $usuario = $this->usuario;
         });
         
         $('#btn_enviar_coluna').click(function (){$('#form_coluna').submit()})
-
+        
+        $('#col_end_imagem').focusout(function (){
+            $.ajax({
+                url:'/coluna/admin/pegarImagemPorUrl',
+                data:{url:this.value},
+                beforeSend: function (){ $('#dv_msg_carregamento_imagem').hide(); $('#dv_imagem_carregando').removeClass('hide');},
+                complete: function (){ $('#dv_imagem_carregando').addClass('hide');}
+            }).done(function (result){
+                $('#dv_msg_carregamento_imagem').html('').append('<i class="fa fa-check-circle"></i> Ok').show();
+            }).fail(function (error){
+                $('#dv_msg_carregamento_imagem').html('').append('<i class="fa fa-times-circle"></i> Erro').show();
+            })
+        });
+        
         $('#form_coluna').submit(function (){
             $('input[name=col_id]').val(col_id);
             $('#series').prop('disabled',false);
@@ -414,27 +437,38 @@ $usuario = $this->usuario;
                     if( ! serie.hasOwnProperty('ignorar_serie')){
                         // inseriu series
                         colunas_pais.push(serie.col_id.toString());
+                        
                     }
                 } else {
                     var index = colunas_pais.indexOf(col_pai_remover);
                     if (index >= 0) {
                         colunas_pais.splice( index, 1 );
                     }
-                    serie = {
-                        serie_id : null,
-                        col_id : false,
-                        col_filho_id: col_id,
-                        ser_ordem : false
-                    };
+//                    serie = {
+//                            serie_id : serie.serie_id,
+//                            col_pai_id : serie.col_id,
+//                            col_id: serie.col_filho_id,
+//                            ser_ordem : serie.ser_ordem
+//                        };
                 }
                 
+                serie_alterada = {
+                        ser_id : serie.ser_id,
+                        col_pai_id : serie.col_id,
+                        ser_ordem : serie.ser_ordem
+                    };
                 
                 //atualiza a coluna na tabela com os novos campos
                 $(colunas).each(function (i, cada_coluna){    
                     if(cada_coluna.col_id === col_id){
                         for(campo in coluna){ colunas[i][campo] = coluna[campo]; }
-                        for(campo in serie) { colunas[i][campo] = serie[campo]; }
-                        return;
+                        
+                        if(serie.serie_id!==null){
+                            for(campo in serie_alterada) { colunas[i][campo] = serie_alterada[campo]; }
+                        }
+                        
+                        console.log(colunas);
+                        return false;
                     }
                     
                 });

@@ -41,6 +41,7 @@ class ColunasAdminController extends ControllerGenerico {
     }
 
     public function saveAction() {
+       
         $request = $this->getRequest();
 
         if (!$request->isPost()) {
@@ -62,7 +63,9 @@ class ColunasAdminController extends ControllerGenerico {
         
         $col_pai_id = (int) $dados['col_pai_id'];
         unset($dados['col_pai_id']);
-        
+        if( ! preg_match('/^(https:\/\/|http:\/\/|ftp:\/\/)/i', $dados['col_end_imagem'])){
+            $dados['col_end_imagem'] = "http://{$dados['col_end_imagem']}";
+        }
         $srv_colunas = $this->p()->getEntity('Coluna', 'ColColuna');
         $entity_coluna = $srv_colunas->create($dados);
         
@@ -70,6 +73,11 @@ class ColunasAdminController extends ControllerGenerico {
         $col_id = $entity_coluna->getColId();
         if ((int) $col_id) {
             $result['coluna'] = $entity_coluna->toArray();
+            /*
+             * $files setado como null pq por enquanto se usa endereços web para imagens
+             * futuramente se usará o upload, por isso o codigo para tal foi mantido
+             */
+            $files['col_imagem']['size'] = null;
             if ($files['col_imagem']['size']) {
                 $nome_arq = strtolower('col_' . $col_id); 
                 $caminho = $this->p()->getCaminhoUniversal(getcwd() . '/public/img/colunas/');
@@ -310,5 +318,21 @@ class ColunasAdminController extends ControllerGenerico {
         $zip->close();
         return $num_files;
     }
-    
+ 
+    public function pegarImagemPorUrlAction(){
+        $request = $this->getRequest();
+
+        if (!$request->isPost()) {
+            return false;
+        }
+
+        $dados = $request->getPost()->toArray();
+        if( ! $dados['url']){return false;}
+        
+        $imagem = getimagesize($dados['url']);
+        
+        if( ! is_array($imagem)){$imagem = [$imagem];}
+        
+        return new JsonModel($imagem);
+    }
 }

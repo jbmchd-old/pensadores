@@ -17,13 +17,13 @@ class IndexController extends ControllerGenerico{
         $colunas = [];
         foreach ($col_ultimas as $key => $cada_coluna) {
             $col_ultimas[$key]['col_titulo']        = ucfirst(mb_strtolower($cada_coluna['col_titulo']));
-            if(empty($cada_coluna['col_end_imagem'])){
-                $col_ultimas[$key]['col_end_imagem']    = $this->atualPath().'img/colunas/imagem_padrao_coluna_paisagem.jpg';
-                $col_ultimas[$key]['orient_imagem'] = 'paisagem';
-            } else {
-                $col_ultimas[$key]['col_end_imagem'] = getcwd().DIRECTORY_SEPARATOR.$cada_coluna['col_end_imagem'];
-                $col_ultimas[$key]['orient_imagem'] = $this->getOrientacao($col_ultimas[$key]['col_end_imagem'] );
-            }
+//            if(empty($cada_coluna['col_end_imagem'])){
+//                $col_ultimas[$key]['col_end_imagem']    = $this->atualPath().'img/colunas/imagem_padrao_coluna_paisagem.jpg';
+//                $col_ultimas[$key]['orient_imagem'] = 'paisagem';
+//            } else {
+//                $col_ultimas[$key]['col_end_imagem'] = getcwd().DIRECTORY_SEPARATOR.$cada_coluna['col_end_imagem'];
+//                $col_ultimas[$key]['orient_imagem'] = $this->getOrientacao($col_ultimas[$key]['col_end_imagem'] );
+//            }
         }
         
         return new ViewModel([
