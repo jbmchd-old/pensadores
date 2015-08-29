@@ -160,7 +160,7 @@ $usuario = $this->usuario;
                                 </form>
                             </div>
                             <div class="clear modal-footer">
-                                <button id="btn_enviar_coluna" class="btn btn-primary" disabled>Confirmar</button>
+                                <button type="button" id="btn_enviar_coluna" class="btn btn-primary" disabled>Confirmar</button>
                             </div>
                         </div>
                     </div>
@@ -413,6 +413,7 @@ $usuario = $this->usuario;
         $('#form_coluna').submit(function (){
             $('input[name=col_id]').val(col_id);
             $('#series').prop('disabled',false);
+            $('#col_texto').val($('iframe').contents().find('body').html());
             var formData = new FormData(this);
             $.ajax({
                 url:'/coluna/admin/save',
