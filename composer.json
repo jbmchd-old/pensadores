@@ -7,9 +7,9 @@
         "zf2"
     ],
     "homepage": "http://framework.zend.com/",
-    "require-dev": {
+    "require": {
         "php": ">=5.5",
-        "zendframework/zendframework": "dev-master",
+        "zendframework/zendframework": "2.5",
         "zendexperts/ze-db": "dev-master"
     }
 }
