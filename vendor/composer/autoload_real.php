@@ -43,8 +43,3 @@ class ComposerAutoloaderInitb7703173692a11626310384011fa43cf
         return $loader;
     }
 }
-
-function composerRequireb7703173692a11626310384011fa43cf($file)
-{
-    require $file;
-}
