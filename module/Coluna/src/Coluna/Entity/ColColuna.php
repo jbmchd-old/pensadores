@@ -14,6 +14,7 @@ class ColColuna extends GenericEntity {
     private $colResumo;
     private $colObservacao;
     private $colEndImagem;
+    private $colPodcast;
     private $colStatus;
     private $usrId;
 

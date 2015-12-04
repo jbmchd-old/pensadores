@@ -4,6 +4,9 @@ $this->plugin('basePath')->setBasePath('/public/');
 
 
 $coluna = $this->coluna;
+//echo '<pre>';
+//print_r($coluna);
+//die();
 $categoria = $coluna['ctg_apelido'];
 $filhas = $coluna['filhas'];
 $titulo_alterado = $coluna['col_titulo'];
@@ -63,17 +66,20 @@ if($categoria == 'pensando-coracao'){
     }
     
     #col_titulo{
-        font-size: 2.7em;
+        font-size: 2.4em;
     }
     
     #col_citacao p{
         margin: 0;
     }
     
-    #col_texto{
-        font-size: 1.3em;
+    #col_podcast{
         padding: 20px;
-        margin-top: 70px;
+    }
+    #col_texto{
+        font-size: 1.2em;
+        padding: 20px;
+        margin-top: 20px;
     }
     #col_texto:first-letter{
         font-size: 4em;
@@ -137,12 +143,18 @@ if($categoria == 'pensando-coracao'){
         <footer><cite><a href="https://<?= $coluna['usr_pagina_web'] ?>"><?= $coluna['usr_pagina_web'] ?></a></cite></footer>
         <footer>Em <?= $coluna['col_data_postagem'] ?></footer>
     </blockquote>
+    <?php if(strlen($coluna['col_podcast'])): ?>
+    <div id="col_podcast" class="col-lg-15 clearfix hide" style="height: 124px">
+        <iframe id="podcast" style="width: 100%; height: 124px" ></iframe>
+    </div>
+    <span class="clearfix"></span>
+    <?php endif; ?>
     <?php if( !empty($coluna['col_end_imagem'])):?>
 <!--    <div class="col-md-10 float-right">
         <img style="width: 100%;" src="<?= $this->basePath().'/img/colunas/'.$coluna['col_end_imagem'].'.jpeg'?>" />
     </div>-->
     <?php endif;?>
-    <div id="col_texto" class="text-justify "> <?= $coluna['col_texto']; ?> </div>
+    <div id="col_texto" class="text-justify"> <?= $coluna['col_texto']; ?> </div>
 </div>
 
 <?php if(sizeof($filhas)):?>
@@ -165,6 +177,29 @@ if($categoria == 'pensando-coracao'){
 <?php endif; ?>
 <script>
 
+    function montaPodcast(){
+        var podcast = '<?=$coluna['col_podcast']?>';
+        if(podcast.length==0) return false;
+        
+        var pattern = /\/\d+/g;
+        var track_id = podcast.match( pattern )[0].substr(1);
+        var cor = '<?=$cor?>';
+        var options = [
+            'color='+cor.substr(1),
+            'theme_color=000',
+            'show_user=false',
+            'show_artwork=false',
+        ];
+
+        $('#col_podcast').removeClass('hide');
+        $('#podcast').attr({
+            scrolling: "no",
+            frameborder: "no",
+            src:'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'+track_id+'&amp;'+options.join('&amp;')
+        });
+        
+    }
+
     $(".layout-logo-principal").removeClass('col-xs-20 col-xs-push-4').addClass('col-xs-10');
     
     $(".navbar .icone-categoria img:not([data-ctg='<?=$coluna['ctg_apelido']?>'])").parent().remove()
@@ -183,5 +218,5 @@ if($categoria == 'pensando-coracao'){
         $(this).css({ background: 'rgba(238, 238, 238, 0.49)', color: '#000'});
     });
     
-    
+    montaPodcast();
 </script>

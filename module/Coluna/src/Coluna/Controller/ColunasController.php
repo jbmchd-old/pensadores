@@ -15,6 +15,7 @@ class ColunasController extends ControllerGenerico {
         $srv_vcolunas = $this->p()->getEntity('Coluna', 'VColColuna');
         $coluna = $this->objetosParaArray($srv_vcolunas->getAllByColId($col_id));
         $coluna = $coluna[0];
+        $coluna['col_texto'] = nl2br($coluna['col_texto']);
         $coluna['col_data_postagem_br'] = (new \DateTime($coluna['col_data_postagem']))->format('d/m/Y');
         $coluna['filhas'] = [];
         if (!is_numeric($coluna['ser_id'] && is_string($coluna['ser_nome']) && strlen($coluna['ser_nome']) > 0)) {
